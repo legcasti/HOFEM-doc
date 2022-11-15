@@ -1,0 +1,2228 @@
+head	1.4;
+access;
+symbols;
+locks
+	luise:1.4; strict;
+comment	@% @;
+
+
+1.4
+date	2022.11.08.14.28.02;	author luise;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2022.07.19.11.09.38;	author luise;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2022.07.01.13.10.36;	author luise;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2022.07.01.12.14.37;	author luise;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.4
+log
+@Summary: para presentacion 8 nov 2022
+@
+text
+@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% $Id: HOFEM_2D_emulation_tr.tex,v 1.3 2022/07/19 11:09:38 luise Exp luise $
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Transparencias para reunión de seguimiento HOFEM-AIRBUS sobre "2D
+% Emulation" en HOFEM
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Magia para que el acrobat reader lea bien el documento.
+%\pdfobjcompresslevel=1
+
+%\documentclass[notes,smaller,xcolor=table,dvipsnames]{beamer}
+\documentclass[smaller,xcolor=table,dvipsnames]{beamer}
+
+%\documentclass[notes,smaller,xcolor=table,dvipsnames,trans]{beamer}
+%\documentclass[smaller,xcolor=table,dvipsnames,trans]{beamer}
+
+%documentclass[notes,smaller,xcolor=table,dvipsnames,handout,hyperref={bookmarks=false}]{beamer}
+%\documentclass[smaller,xcolor=table,dvipsnames,handout,hyperref={bookmarks=false}]{beamer}
+
+%Ver uso de oprion onlyslideswithnotes  que no me parece funcionar
+
+%\hypersetup{colorlinks=true,linkcolor=purple}
+%\hypersetup{colorlinks=true,allcolors=purple}
+
+%\includeonlyframes{current}
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+%  \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+%  \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+  \nofiles
+}
+
+\usepackage{ifthen}
+% \newboolean{ARCS} % Requiere package ``ifthen''
+% \setboolean{ARCS}{FALSE} % Si true se personaliza algo para el curso
+%                         % ARCS (antennas and RCS del MasteEADS)
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{preamble_tr}
+\newcounter{savedenum}
+\newcommand*{\saveenum}{\setcounter{savedenum}{\theenumi}}
+\newcommand*{\resumeenum}{\setcounter{enumi}{\thesavedenum}}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Líneas para hacer versión con "notes" comentando cada traspa
+%  Comentar las líneas para versión sin notes
+
+% \usepackage{pgfpages}
+
+% \setbeamertemplate{note page}[plain]
+% \setbeameroption{show notes on second screen=bottom}
+% \makeatletter
+% \def\beamer@@setupnote{%
+%   \gdef\beamer@@notesactions{%
+%     \beamer@@outsideframenote{%
+%       \beamer@@atbeginnote%
+%       \beamer@@notes%
+%       \ifx\beamer@@noteitems\@@empty\else
+%       \begin{itemize}\itemsep=0pt\parskip=0pt%
+%         \beamer@@noteitems%
+%       \end{itemize}%
+%       \fi%
+%       \beamer@@atendnote%
+%     }%
+%     \gdef\beamer@@notesactions{}%
+%   }
+% }
+% \makeatother
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\GreenT}{\url{Green3D}}
+\newcommand{\GreenD}{\url{Green2D}}
+\newcommand{\GreenTEw}{\url{Green3D_Ewald}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Controla si se genera una version para alumno
+% o no. En la version para alumno se omiten algunos detalles
+\newboolean{alumno} % Requiere package ``ifthen'' 
+%\setboolean{alumno}{TRUE}
+\setboolean{alumno}{FALSE}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newcommand{\dirinputtex}{./inputtex}
+% \newcommand{\dirASIGNATURA}{../}
+% \newcommand{\dirTELEMATICS}{./inputpdf/}
+% \newcommand{\dirANTENAS}{./inputpdf/}
+
+\graphicspath{{./figures/}{./figures_Issue_field_tangential_at_PEC_non_zero/}{./Ewald}}
+\lstset{inputpath=./code_output}
+
+\usepackage[nofancy]{rcsinfo}
+\rcsInfo $Id: HOFEM_2D_emulation_tr.tex,v 1.3 2022/07/19 11:09:38 luise Exp luise $
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title[HOFEM-AIRBUS(v{\rcsInfoRevision})]{HOFEM-AIRBUS 2D Emulation}
+
+%\date[]{}%{Version {\rcsInfoRevision}, checked out \today}
+
+% \author[GREMA-TSC-UC3M]{Luis E.\ Garcia-Castillo \\
+%   \url{legcasti@@ing.uc3m.es}}
+
+\author[]{-June 7th 2022---}
+
+\author{}
+
+\date[]{\small{%
+    Group of Radiofrequency, Electromagnetism, Microwaves \\ and Antennas (GREMA) \\    \url{http://grema.webs.tsc.uc3m.es/}
+ \\[0.8\baselineskip]
+    % 
+    Departamento de Teoría de la Señal y Comunicaciones (TSC) \\
+    Universidad Carlos III de Madrid, Spain \\
+  }}
+
+% \date[]{\small{%
+%     Departamento de Teoría de la Señal y Comunicaciones (TSC) \\
+%     Universidad Carlos III de Madrid, Spain \\
+% }}
+
+\institute{Contact: Luis Emilio García-Castillo
+  \url{legcasti@@ing.uc3m.es}, Adrián Amor \url{aamor@@ing.uc3m.es}, Sergio Llorente \url{sollorent@@ing.uc3m.es}}
+
+%\date{}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each section:
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>[allowframebreaks]{Outline}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
+% \AtBeginSubsection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+%\AtBeginPart{\frame{\partpage}}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Ya esta definido comando en el fichero de preambulo.
+% \newcommand{\FIGURA}[1][]{\vspace*{2\baselineskip}\alert{FIGURA!!!} #1\vspace*{2\baselineskip}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+  \newcommand*{\meshCCC}[3]{cylinder_sp_circled_s_circled_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshCSS}[3]{cylinder_sp_squared_s_squared_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshPS}[3]{cylinder_sp_pec_s_squared_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshPC}[3]{cylinder_sp_pec_s_circled_d_#1_h_#2_m_#3.em.mesh}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% \begin{frame}[allowframebreaks]{Outline}
+%   \tableofcontents
+% \end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{HOFEM 2D Emulation}
+
+  \begin{columns}
+    \column{0.25\textwidth} \centering
+    {\includegraphics[angle=0,width=\textwidth]{2D_Cylinder_sliced}}
+
+    \column{0.7\textwidth} \centering
+    \begin{block}{3D Green's Function}
+      \begin{itemize}
+      \item Sum of infinite contributions (from each repeated cell)
+      \item Ewald acceleration needed
+        \begin{itemize}
+        \item It works great, though
+        \end{itemize}
+        \begin{equation*}
+          \text{Green}(R) = \dfrac{1}{4\pi}
+          \sum_{n=-\infty}^\infty \dfrac{e^{-j k R_n}}{R_n}
+        \end{equation*}
+        with
+        \begin{equation*}
+          R_n=\abs{\vr-\vrp_n}, \vrp_n=\vrp_0 + n d
+        \end{equation*}
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{columns}
+    \column{0.25\textwidth} \centering
+    {\includegraphics[angle=0,width=\textwidth]{2D_Cylinder_unitslice}}
+    
+    \column{0.7\textwidth} \centering
+    \begin{block}{2D Green's Function}
+      \begin{itemize}
+      \item No summation needed
+        \begin{equation*}
+          \text{Green}(\rho) = \dfrac{1}{4\im}  H_0^{(2)}(k|\rho|)
+        \end{equation*}
+      \end{itemize}
+    \end{block}
+  \end{columns}
+
+  
+ \end{frame}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Near Field (FE-IIEE loop)}
+  
+  \begin{block}{Sanity Checks (MATLAB)}
+    \begin{itemize}
+    \item Equivalence of infinite sum of 3D Green's function with 2D
+      Green's function on the unit cell 
+  \end{itemize}
+    \begin{columns}%[T]
+      \column{0.48\textwidth}
+      \includegraphics[width=\textwidth]{GreenFunctions_R.pdf} \\
+     % \footnotesize{Green's function values as a function of $\rho$}
+      \column{0.48\textwidth}
+      \includegraphics[width=\textwidth]{GreenFunctions_convN_reim.pdf} \\
+      %\footnotesize{3D Green's function values as the number of unit
+      %  cells considered (no Ewald acceleration)}
+    \end{columns}
+  \end{block}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{Sanity Checks (MATLAB)}
+    Equivalence of infinite sum of 3D Green's function with 2D Green's
+    function on the unit cell
+    \begin{columns}%[T]
+      \column{0.48\textwidth}
+       \includegraphics[width=\textwidth]{GreenFunctions_Comp.pdf} \\
+%      \footnotesize{Difference Green's function values (3D summation and 2D)
+%        as a function of $\rho$}
+      \column{0.48\textwidth}
+      \includegraphics[width=\textwidth]{GreenFunctions_convN_abs.pdf} \\
+%      \footnotesize{Difference Green's function values (3D summation
+%        and 2D) with the number of unit cells (slices) considered (no
+%        Ewald acceleration)}
+    \end{columns}
+  \end{block}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{HOFEM Implementation}
+
+    \begin{itemize}
+    \item Coded
+    \item Tested
+    \end{itemize}
+    
+    \begin{columns}%[T]
+      \column{0.45\textwidth}
+      \lstinputlisting[basicstyle=\tiny,tabsize=3,frame=none,
+      % caption={3D Green's Function},
+      firstline=125,lastline=145]{HOFEM_output_3D_greens_function.txt}
+      
+      % \column{0.45\textwidth}
+      % \lstinputlisting[basicstyle=\tiny,tabsize=3,frame=none,caption={2D
+      %   Green's Function},firstline=125,lastline=130]{HOFEM_output_2D_greens_function.txt}
+      
+    \end{columns}
+  \end{block}
+
+  % \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  % \lstinputlisting[basicstyle=\tiny,tabsize=3,frame=none,caption={2D
+  %   Green's Function},firstline=20,lastline=30]{HOFEM_output_diff_3D_2D_greens_function_sidebyside.txt}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ Code output (terminal):
+  
+ \lstinputlisting[basicstyle=\scriptsize,tabsize=3,frame=none,
+ % caption={2D Green's Function}
+ ]{HOFEM_output_diff_3D_2D_greens_function_iterations.txt}
+
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+  \begin{columns}
+    \column{0.48\textwidth} \centering
+    {\includegraphics[angle=0,width=\textwidth]{Cylinder_0_5b_nearfield_3D_greens}}
+    \column{0.48\textwidth} \centering
+    {\includegraphics[angle=0,width=\textwidth]{Cylinder_0_5b_nearfield_3D_greens}}
+  \end{columns}    
+
+  
+\end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Far Field (postprocess)}
+
+  \begin{block}{Equivalence of Green's Functions for Far Field}
+    \begin{itemize}
+    \item Can we use an infinite sum of 3D Green's far-field functions
+      to model the 2D Green's far-field?
+      \begin{itemize}
+      \item \alert {NO}
+      \item and it makes sense!
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+    
+
+  \begin{block}{Far Field as Fourier Transform} 
+      The Fourier Transform of a constant current contribution along
+      $z$ is a delta function in the spatial frequency domain, i.e.,
+      variable $\theta$:
+      % 
+      \begin{equation}
+        \text{Far Field}(\theta,\phi) =  \alert{\delta(\theta-\pi/2)}  F(\phi)
+      \end{equation}
+      
+    \end{block}
+  
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \begin{columns}
+      \column{0.46\textwidth} \centering
+      \begin{block}{$\theta\ne 90^\circ$: \alert{Oscillations}}
+        \includegraphics[clip=true,trim=100 200 100 200,width=\textwidth]{GreenFar_abs_theta45} \\
+      \end{block}
+      
+      \column{0.46\textwidth} \centering
+      \begin{block}{$\theta=90^\circ$: \alert{Divergence}}
+        \includegraphics[clip=true,trim=100 200 100 200,width=\textwidth]{GreenFar_abs_theta90} \\
+      \end{block}
+            
+    \end{columns}
+
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{HOFEM Implementation}
+
+    \begin{itemize}
+    \item  Coded (in progress)
+    \item Tested (in progress)
+    \end{itemize}
+  \end{block}  
+    
+  \end{frame}
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering    \Large{Rethinking\ldots}
+
+    \vspace*{0.5\baselineskip}
+
+    \centering\parbox{\textwidth}{%
+      AIRBUS: \emph{\foreignlanguage{spanish}{hay un chico con nosotros que
+          resuelve problemas de scattering de cilindros y no usa
+          función de Hankel. Usa Green3D para calcular el campo
+          (lejano) de scattering de una rodaja y \alert{le funciona.}}
+        }}
+
+      \vspace*{\baselineskip}
+      
+      \begin{itemize}
+      \item Further study of differences between  {\GreenD} and {\GreenT}
+        \begin{itemize}
+        \item Obvious (after a maturation process) for far field
+        \item Not so obvious for near field (i.e., in its impact in
+          FE-IIEE loop)
+        \end{itemize}
+      \end{itemize}
+      
+  \end{frame}
+  
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Far Field (postprocess)}
+
+  \begin{block}{Equivalence of Green's Functions for Far Field}
+    \begin{itemize}
+    \item Can we use an infinite sum of 3D Green's far-field functions
+      to model the 2D Green's far-field?
+      \begin{itemize}
+      \item NO
+      \item and it makes sense!
+      \item No need of infinite sum (\alert{far field {\GreenT}/{\GreenD} is enough})
+        \begin{itemize}
+        \item Note that far field versions of {\GreenT} (with
+          $r=\rho$) and {\GreenD} are equal up to a constant
+        \end{itemize}
+
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+    
+
+  \begin{block}{Far Field as Fourier Transform} 
+      The Fourier Transform of a constant current contribution along
+      $z$ is a delta function in the spatial frequency domain, i.e.,
+      variable $\theta$:
+      % 
+      \begin{equation}
+        \text{Far Field}(\theta,\phi) =  \alert{\delta(\theta-\pi/2)}  F(\phi)
+      \end{equation}
+      
+    \end{block}
+  
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    \begin{block}{{\GreenD} vs {\GreenT}}
+
+      
+      $F(\phi)$ is the same (after normalization) considering asymptotic
+      expressions of {\GreenT} and {\GreenT}
+      
+    \begin{columns}\centering
+      \column{0.4\textwidth}% \centering
+      %
+      \begin{equation*}
+        H_0^{(2)}(k\rho)
+        \enskip \overset{\rho\rightarrow\infty}{\approx} \enskip
+        \sqrt{\dfrac{2 j }{\pi k \rho}} \, e^{-jk\rho}
+      \end{equation*}
+
+      \column{0.4\textwidth}% \centering
+      % 
+      % 
+      \begin{equation*}
+        \dfrac{e^{-jkR}}{4\pi R}
+         \enskip \overset{r\rightarrow\infty}{\approx}  \enskip
+        \dfrac{e^{-jkr}}{4\pi r} e^{j k r^\prime\! \cos\psi}
+      \end{equation*}
+
+    \end{columns}
+    
+    \end{block}
+
+
+  \end{frame}
+
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Near Field (FE-IIEE loop)}
+  
+% {\Gree3D vs {\GreenD} }
+
+
+ Code output (terminal):
+
+ \begin{itemize}
+ \item From previous meeting % Large $S'-S$
+   \begin{columns}%[T]
+   \column{0.45\textwidth} {\GreenD} 
+   \column{0.45\textwidth} {\GreenT} 
+ \end{columns}   
+
+ \lstinputlisting[basicstyle=\scriptsize,tabsize=3,frame=none,
+ % caption={2D Green's Function}
+ ]{HOFEM_output_diff_3D_2D_greens_function_iterations_reversed.txt}
+
+ \vspace{\baselineskip}
+
+ \alert{How can it work?} Note we used {\GreenT} itself (only one
+ slide was considered)
+ 
+ 
+ \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ Code output (terminal):
+
+ \item Large $S'-S$
+   \begin{columns}[T]
+   \column{0.45\textwidth} {\GreenD} 
+   \column{0.45\textwidth} {\GreenT} 
+ \end{columns}   
+
+ \lstinputlisting[basicstyle=\scriptsize,tabsize=3,frame=none,
+ ]{HOFEM_output_diff_3D_2D_greens_function_iterations_reversed.txt}
+ 
+\item Small $S'-S$
+   \begin{columns}%[T]
+   \column{0.45\textwidth} {\GreenD} 
+   \column{0.45\textwidth} {\GreenT} 
+ \end{columns}   
+
+ \lstinputlisting[basicstyle=\scriptsize,tabsize=3,frame=none,
+ ]{HOFEM_output_diff_3D_2D_greens_function__small_S-Sp_iterations_reversed.txt}
+
+ 
+\end{itemize}
+
+\end{frame}
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% \begin{frame}[allowframebreaks]{Study of {\GreenT} vs {\GreenD}}
+ 
+ 
+%   \textbf{GRAFICAS DE LAS GEOMETRIAS USADAS EN LAS PRUEBAS}
+
+
+%   \begin{itemize}
+%   \item Lo que le enseñamos meeting pasado fue sobre (S'-S grande,
+%     espesor pequeño y S,S' rectangulares):
+    
+% \begin{verbatim}
+% |`cylinder_05b_1`               |1      |1      |0.05     |Rectangular    |Rectangular      |1
+% \end{verbatim}
+    
+%     \item Durante el finde (S'-S pequeño y espesor grande, con S', S circulares)
+  
+% \begin{verbatim}
+%     |`cylinder_05e_01_01_075`       |0.1    |0.1    |1        |Circular       |Circular         |0.75
+% \end{verbatim}
+
+%     \item Para ver efecto del espesor se puede comparar 
+      
+% \begin{verbatim}
+%     |`cylinder_05e_01_01_075`       |0.1    |0.1    |1        |Circular       |Circular         |0.75
+%     |`cylinder_sp_circled_s_circled_d_1_h_005_m_075`  |0.1|0.1|0.05   |Circular    |Circular     |0.75
+% \end{verbatim}
+
+%     \item Mallado con S' sobre PEC para paranoias de J,M equivalentes.
+
+%       Uno de los:
+% \begin{verbatim}
+% Espesor bajo, distancia S-S' baja:
+% |`cylinder_sp_pec_s_circled_d_01_h_005_m_07`  |0  |0.1|0.05   |Circular |Circular     |0.7
+
+
+% Espesor alto, distancia S-S' baja:
+% |`cylinder_sp_pec_s_circled_d_01_h_1_m_07`    |0  |0.1|1      |Circular |Circular     |0.7
+% \end{verbatim}
+
+      
+      
+%   \end{itemize}
+% \end{frame}
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{frame}[allowframebreaks]{{\GreenD} vs {\GreenT}}{Comparison
+    with analytical solution}
+
+  \begin{itemize}
+  \item Most results displayed correspond to TM and E field
+  \item H field (i.e., RotE) identical conclusions
+  \item By duality (satisfied by HOFEM) TE results ``should'' be
+    identical (tested).
+  \item Most results shown here correspond to both $S'$ and $S$
+    conformal to the cylinder (circular boundary). Analogous
+    results/conclusions are obtained with rectangular boundaries for
+    $S'$ and $S$ (and combinations of them).
+  \end{itemize}
+  % \textbf{\url{cylinder_05e_01_01_075} ¿Graficas del estilo de??}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  
+    \begin{columns}
+        \column{0.55\textwidth}
+    \includegraphics[width=\linewidth]
+    {results/2D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+        \column{0.4\textwidth}
+        \begin{itemize}
+          \item 300\,MHz
+          \item Small $S-S'$
+          \item Thick slice
+        \end{itemize}
+    \end{columns}
+
+    \framebreak
+
+    Evolution scattered electric field ($S'$ over $S$)
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{1:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/1/300/\meshCCC{01}{1}{075}/E_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/1/300/\meshCCC{01}{1}{075}/E_S.pdf}
+    }
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{20:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+    }
+
+    
+    \framebreak
+    Evolution scattered magnetic field ($S'$ over $S$)
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{1:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/1/300/\meshCCC{01}{1}{075}/H_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/1/300/\meshCCC{01}{1}{075}/H_S.pdf}
+    }
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{20:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/300/\meshCCC{01}{1}{075}/H_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/20/300/\meshCCC{01}{1}{075}/H_S.pdf}
+    }
+
+
+    \framebreak
+
+    Evolution electric field on $S'$
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{1:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/1/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/1/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+    }
+
+    \vbs
+
+    Iteration \makebox[0pt][l]{20:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/3D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+    }
+
+    \framebreak
+
+    \begin{itemize}
+    \item Higher error with {\GreenT}
+      \begin{itemize}
+      \item This is a case with small distance $S-S'$ and large thickness
+      \item Nevertheless, the error is always significantly higher
+        than {\GreenD}
+      \end{itemize}
+    \item {\GreenT} does not converge to right solution
+    \item Components $E_x$, $E_z$, $H_y$ are not null \\
+      \footnotesize{(issue of \alert{($\ast$)} certainly added confusion on the
+      debugging/verification of the code)}
+      \begin{itemize}
+      \item Much higher levels with {\GreenT}
+      \item {\GreenT} (the Green's function itself) generates non null
+        $E_x$, $E_z$, $H_y$ from $E_z$ on $S'$
+      \item {\GreenD} (the Green's function itself) does not generate
+        any $E_x$, $E_z$, $H_y$
+        \begin{itemize}
+        \item Numerically, non-zero levels of $E_x$, $E_z$, $H_y$ are
+          generated because numerical FEM solution has non zero levels of
+          $E_x$, $E_z$, $H_y$ (tested!)
+        \end{itemize}
+      \end{itemize}
+    \item Numerical noise always present  due to discretization 
+      \begin{itemize}
+      \item Clearly visible in this case
+      \item Decreases with finer discretization ---FEM mesh--- (tested!)
+      \end{itemize}
+    \end{itemize}
+    
+    {\footnotesize \alert{($\ast$)} Issue of GiD/HOFEM-GUI representation of fields on surface}
+  
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Esto es un tema que no esta relacionado directamente con 2D
+% Emulation sino genral del código pero se lo cuento aqui a Airbus
+% porque viene a cuento.
+
+\begin{frame}[plain]
+  \centering    \Large{Rethinking\ldots}
+  
+  {\footnotesize \alert{($\ast$)} Issue of GiD/HOFEM-GUI representation of fields on surface}
+  
+\end{frame}
+
+% %%%%%
+  
+\begin{frame}[allowframebreaks]{GiD/HOFEM-GUI Field Representation 
+    on Surfaces}{Examples with PEC surfaces}
+
+  \begin{itemize}
+  \item $E_z$ should be null on the  caps (top and
+    bottom $y=\text{cte}$)
+
+    \vbs
+   
+    \begin{columns}%[T]
+      \centering
+      \column{0.48\textwidth}\centering
+      \includegraphics[width=\textwidth,clip=true,trim=70 0 350 140]
+      {Ez_original} \\
+      \footnotesize{$\abs{E_z}$ (default color scale)}
+      \column{0.48\textwidth}\centering
+      \includegraphics[width=\textwidth,clip=true,trim=70 0 350 140]
+      {Ez_original_saturado_01} \\
+      \footnotesize{$\abs{E_z}$ (saturated color scale)}
+    \end{columns}
+    
+
+    \framebreak % %%%%%%%%%%%%%
+
+  \item $E_y$ should be null on the cylinder ``sides'' (i.e., on the
+    PEC cylinder)
+
+    \vbss
+   
+    \begin{center}
+     \begin{columns}%[T]
+%      \column{0.48\textwidth}\centering
+      % \includegraphics[width=\textwidth,clip=true,trim=70 0 350 140]
+      % {Ey_original} \\
+      % \footnotesize{$\abs{E_y}$ }
+      \column{0.70\textwidth}\centering
+      \includegraphics[width=\textwidth,clip=true,trim=70 0 350 140]
+      {Ey_internal_cylinder} \\
+      \footnotesize{$\abs{E_y}$ (only PEC cylinder surface shown)}
+    \end{columns}
+  \end{center}
+  \end{itemize}
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{comment} % NO ES MUY CLARA LA CONCLUSION (por tema de como sale la Green3D o el campo  H) ASI QUE SE OMITEN
+
+\begin{frame}[allowframebreaks]{Effect of Discretization}{Simple test
+    changing frequency \alert{(note other electrical distances also
+      change)}}
+
+
+%    $300\,\text{MHz}$ \makebox[0pt][l]{20:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/300/\meshCCC{01}{1}{075}/H_S.pdf}
+    }
+
+    
+    \vbs
+
+%    Lower frequency \makebox[0pt][l]{1:}\hspace{2em}
+    \raisebox{\baselineskip-\height}{
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/30/\meshCCC{01}{1}{075}/E_S.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]
+      {results/2D/20/30/\meshCCC{01}{1}{075}/H_S.pdf}
+    }
+
+  \end{frame}
+  
+\end{comment} % %%%%%%%%%%%
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{comment} % NO ES MUY CLARA LA CONCLUSION (la quitamos)
+
+\begin{frame}[allowframebreaks]{Effect of Distance $S'-S$}{Scattered near field}
+
+    \begin{columns}
+      \column{0.25\textwidth}
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/geometry.pdf}
+      \column{0.3\textwidth}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/E_S.pdf}
+
+      
+    \column{0.3\textwidth}
+      \hfill\GreenT\hfill\mbox{}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{1}{1}{075}/E_S.pdf}
+        
+
+    \end{columns}
+
+    \begin{itemize}
+    \item  {\GreenT} results always worse than {\GreenD}
+    \item Difficult comparison ($S$ is not at the same electrical distance) 
+    \end{itemize}
+    
+  \end{frame}
+
+\end{comment}  % %%%%%
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\begin{comment} % Idem que anterior
+
+  \begin{frame}[allowframebreaks]{Effect of Distance $S'-S$}{FEM solution}
+
+    \begin{columns}
+      \column{0.25\textwidth}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/geometry.pdf}
+      \column{0.3\textwidth}
+      \hfill\GreenD\hfill\mbox{}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/E_Sp.pdf}
+
+      
+    \column{0.3\textwidth}
+      \hfill\GreenT\hfill\mbox{}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{1}{1}{075}/E_Sp.pdf}
+        
+
+    \end{columns}
+
+    \begin{itemize}
+      \item The IIEE iterative method has low effect when $S-S'$ is larger.
+    \end{itemize}
+    
+  \end{frame}
+  
+\end{comment}  % %%%%%
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+\begin{frame}[allowframebreaks]{Effect of ``Thickness''}{Scattered
+    near field ---\alert{Note error in figure captions: thickness is
+      $0.05\,\lambda$ for the thin slice---}}
+    
+    \begin{columns}
+      \column{0.25\textwidth}
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{005}{075}/geometry.pdf}
+      \column{0.3\textwidth}
+      \hfill\GreenD\hfill\mbox{}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{005}{075}/E_S.pdf}
+
+      
+    \column{0.3\textwidth}
+      \hfill\GreenT\hfill\mbox{}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{005}{075}/E_S.pdf}
+        
+
+    \end{columns}
+
+  \end{frame}
+
+  \begin{frame}[allowframebreaks]{Effect of ``Thickness''}{FEM solution
+    ---\alert{Note error in figure captions: thickness is
+      $0.05\,\lambda$ for the thin slice---}}
+    
+    \begin{columns}
+      \column{0.25\textwidth}
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{005}{075}/geometry.pdf}
+      \column{0.3\textwidth}
+      \hfill\GreenD\hfill\mbox{}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{005}{075}/E_Sp.pdf}
+
+      
+    \column{0.3\textwidth}
+      \hfill\GreenT\hfill\mbox{}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{1}{075}/E_Sp.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{005}{075}/E_Sp.pdf}
+        
+
+    \end{columns}
+
+    \framebreak 
+    
+    \begin{itemize}
+    \item The thickness is the main factor for error with {\GreenT}
+    \item {\GreenD} behaves great!
+    \item Always lower error  with thin slices% (although convergence is slow)
+    \end{itemize}
+    
+    
+  \end{frame}
+
+    
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+
+  \begin{comment} %%%%%%%  POR HACER
+    
+  \begin{frame}[allowframebreaks]{Effect on Polarization Purity}
+
+    \begin{itemize}
+    \item With ``thickness'' \textbf{Usamos espesor gordo para que se
+        note:} Por ejemplo, O bien
+      \url{cylinder_sp_circled_s_circled_d_1_h_1_m_075} o bien
+      \url{cylinder_sp_circled_s_circled_d_01_h_1_m_075} (no se en
+      cual se notará mas según distancia S'-S, uhm.....)
+
+      \vskip 1em
+      
+      \begin{columns}%[T]
+      \column{0.48\textwidth}
+      \FIGURA{\GreenT}
+%      \includegraphics[width=\textwidth]{kk_iter1} \\
+%      \footnotesize{kkkkk}
+      \column{0.48\textwidth}
+      \FIGURA{\GreenD}
+%      \includegraphics[width=\textwidth]{kk_iter82} \\
+      %\footnotesize{kkkk}
+    \end{columns}
+  \end{itemize}
+    \begin{itemize}
+    \item Conclusion 1
+    \item \ldots
+    \end{itemize}
+    
+  \end{frame}
+
+  \end{comment} %%%%%%%%
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+  \begin{frame}[allowframebreaks]{Other Effects (paranoic
+      mode)}{Effect of $S'$ on PEC cylinder}
+
+    \begin{columns}
+    \column{0.25\textwidth}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{1}{1}{075}/geometry.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshPC{1}{1}{085}/geometry.pdf}
+      \column{0.3\textwidth}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/E_S.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshPC{1}{1}{085}/E_S.pdf}
+      \column{0.3\textwidth}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{1}{1}{075}/H_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshPC{1}{1}{085}/H_S.pdf}
+
+      
+        
+
+    \end{columns}
+    
+  \end{frame}
+
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+  \begin{frame}[allowframebreaks]{Other Effects (paranoic
+      mode)}{Effect of $S'$, $S$ Curved}
+    
+      \begin{columns}
+    \column{0.25\textwidth}
+
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCCC{01}{1}{075}/geometry.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/3D/20/300/\meshCSS{01}{1}{075}/geometry.pdf}
+      \column{0.3\textwidth}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/E_S.pdf}
+
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCSS{01}{1}{075}/E_S.pdf}
+      \column{0.3\textwidth}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCCC{01}{1}{075}/H_S.pdf}
+        
+        \includegraphics[width=\linewidth]
+        {results/2D/20/300/\meshCSS{01}{1}{075}/H_S.pdf}
+
+      
+        
+
+    \end{columns}
+    
+
+    
+  \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[allowframebreaks]{{\GreenT} vs {\GreenD}}{Conclusions}
+
+    \begin{block}{Conclusions}
+      \begin{itemize}
+      \item {\GreenT} itself not valid for 2D Emulation
+        \begin{itemize}
+        \item FE-IIEE converges but
+          \begin{itemize}
+          \item Quality of solution far from great
+          \item It may guide you to wrong solution
+          \end{itemize}
+        \end{itemize}
+      \item Need to activate contributions of slice replicas along
+        direction of cylinder (translation symmetry) \alert{\GreenTEw}
+      \end{itemize}
+    \end{block}
+  
+  \end{frame}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[fragile,allowframebreaks]{\GreenTEw}
+
+    
+    \begin{block}{Ewald Method in HOFEM}
+    \begin{columns}[T]
+      \column{0.50\textwidth}
+      \includegraphics[width=\textwidth,clip=true,trim=70 350 70 80]{Tesis_Daniel_Ewald_1} 
+      \column{0.45\textwidth}
+      \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\tiny]
+!Distancia de la celda unidad en X
+ Dx = SQRT(DOT_PRODUCT(PBC_structure%offset_vector(1,:),PBC_structure%offset_vector(1,:)))
+ !Distancia de la celda unidad en Y
+ Dy = SQRT(DOT_PRODUCT(PBC_structure%offset_vector(2,:),PBC_structure%offset_vector(2,:)))
+    
+ E = SQRT(PI/Dx/Dy)
+
+ !Sum using Ewald transformation
+ DO m=-2,2
+    DO n=-2,2
+
+    !Calcular alpha_mn
+    alpha_mn = SQRT(CMPLX((PI*m/Dx)**2 + (PI*n/Dy)**2 + (PI*m/Dx)*Kx + &
+    (PI*n/Dy)*Ky + (1.0_DBL/4.0_DBL)*(Kx**2+Ky**2-K**2),0.0_DBL,KIND=DBL));
+      \end{lstlisting}
+    \end{columns}
+  \end{block}
+
+
+  \begin{block}{Ewald 1D periodicity}
+    \begin{itemize}
+    \item Naively we thought if was simply setting
+      either $m=0$ or $n=0$
+    \item \alert{But it is NOT} \ldots see \hyperlink{Ewald1D}{this section on Ewald 1D}
+    \end{itemize}
+  \end{block}
+
+  \end{frame}
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  
+
+
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering    \Large{From our last meeting (Jun 30th, 2022) we did \ldots}
+    
+  \end{frame}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{frame}[allowframebreaks]{Check TE polarization}{Comparison
+      with TM results}
+    
+    \begin{columns}
+      \column{0.5\linewidth}
+      \includegraphics[width=\linewidth]{results/TE/geometry.pdf}
+      
+      \column{0.45\linewidth}
+      \begin{itemize}
+      \item
+        Freq: 300\,MHz. ($\lambda=1\,$m)
+      \item
+        Thickness: 0.05\,m
+      \end{itemize}
+      
+    \end{columns}
+    
+    \framebreak
+    
+    \begin{columns}
+      \column{0.35\linewidth}
+      \hfill TM incident field \hfill\mbox{}
+      \vspace{1ex}
+      \includegraphics[width=\linewidth]{results/TM/E_Sp.pdf}
+      \includegraphics[width=\linewidth]{results/TM/E_S.pdf}
+      
+      \column{0.35\linewidth}
+      \hfill TE incident field \hfill\mbox{}
+      \vspace{1ex}
+      \includegraphics[width=\linewidth]{results/TE/E_Sp.pdf}
+      \includegraphics[width=\linewidth]{results/TE/E_S.pdf}
+      
+    \end{columns}
+    
+    \framebreak
+    
+    \begin{columns}
+      \column{0.35\linewidth}
+      \hfill TM incident field \hfill\mbox{}
+      \vspace{1ex}
+      \includegraphics[width=\linewidth]{results/TM/H_Sp.pdf}
+      \includegraphics[width=\linewidth]{results/TM/H_S.pdf}
+      
+      \column{0.35\linewidth}
+      \hfill TE incident field \hfill\mbox{}
+      \vspace{1ex}
+      \includegraphics[width=\linewidth]{results/TE/H_Sp.pdf}
+      \includegraphics[width=\linewidth]{results/TE/H_S.pdf}
+      
+    \end{columns}
+    
+  \end{frame}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{frame}[fragile,allowframebreaks]{Fortran Module}{\url{EMULATION_2D_scattering_module.F90}}
+
+    \begin{lstlisting}[style=myFORTRANcodeS]
+   TYPE :: EMULATION_2D_scattering_type
+      PRIVATE 
+      LOGICAL :: enabled_EMULATION_2D_scattering = &
+           DEFAULT_ENABLED_EMULATION_2D_SCATTERING
+      CHARACTER(len=2) :: green_function_type = DEFAULT_GREEN_FUNCTION_TYPE
+      LOGICAL :: enabled_normal_incidence = DEFAULT_ENABLED_NORMAL_INCIDENCE
+      ! Thickness (height) of 3D slice used to emulate 2D
+      REAL(KIND=DBL) :: slice_thickness = DEFAULT_SLICE_THICKNESS 
+   END TYPE EMULATION_2D_scattering_type
+
+   PUBLIC ::  &
+      is_EMULATION_2D_scattering_enabled, &
+      enable_EMULATION_2D_scattering, &
+      disable_EMULATION_2D_scattering, &
+      get_EMULATION_2D_scattering_green_function_type, &
+      set_EMULATION_2D_scattering_green_function_type, &
+      is_EMULATION_2D_scattering_normal_incidence, &
+      enable_EMULATION_2D_scattering_normal_incidence, &
+      disable_EMULATION_2D_scattering_normal_incidence, &
+      get_EMULATION_2D_scattering_slice_thickness, &
+      set_EMULATION_2D_scattering_slice_thickness, &
+      EMULATION_2D_scattering_print, &
+      EMULATION_2D_scattering_sanitycheck         
+    \end{lstlisting}
+
+
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   
+   \begin{block}{Input file \url{.em}} 
+     \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+--------------------------------------
+--     EMULATION 2D properties      --
+--------------------------------------
+-- EMULATION 2D activation flag
+EMULATION_2D = true
+-- Set the type of green function used
+EMULATION_2D_green_function_type = "2D"
+-- Activation flag for normal incidence
+EMULATION_2D_normal_incidence = true
+-- Thickness of the slice used as pseudo2D problem
+EMULATION_2D_slice_thickness = 1.0
+     \end{lstlisting}
+   \end{block}
+
+   \begin{itemize}
+   \item The case of ``normal incidence'' is kept as a separate case
+     \begin{itemize}
+     \item It does not require periodic meshes
+     \end{itemize}
+   \item Value of ``slice thickness'' set up manually (desirable to be
+     set automatically, e.g., GUI or HOFEM mesh preprocessing)
+   \end{itemize}
+   
+  \end{frame}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{frame}[fragile,allowframebreaks]{Fortran Module}{\url{EMULATION_2D_scattering_module.F90} }
+
+    \begin{block}{Input file \url{.em}} 
+      \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+--------------------------------------
+--     EMULATION 2D properties      --
+--------------------------------------
+-- Orientation of the cylinder (axis unit vector)
+EMULATION_2D_cylinder_axis = {0.0,1.0,0.0}
+     \end{lstlisting}
+   \end{block}
+
+
+   \begin{itemize}
+   \item Cylinder axis in arbitrary direction
+     \begin{itemize}
+     \item Cylinder axis is set up manually (desirable to be set
+       automatically, e.g., GUI or HOFEM mesh preprocessing)
+     \end{itemize}
+   \end{itemize}     
+
+   
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{block}{Input file \url{.em}} 
+      \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+--------------------------------------
+--     EMULATION 2D properties      --
+--------------------------------------
+-- Number of incidence angles to be analized
+EMULATION_2D_num_exterior_excitations = 1
+-- Type of plane wave ("Single", "Multiple")
+EMULATION_2D_exterior_type_1 = "Single"
+-- Angle of incidence (with respect to local spherical coordinate
+-- system with z axis along the cylinder axis)
+--   * First number is 'theta' (angle with respect to cylinder axis;
+--     90 corresponds to normal incidence)
+--   * Second number is 'phi' (angle of associated local cylindrical
+--     coordinate system)
+EMULATION_2D_exterior_angle_1 = {90,45}
+-- Polarization (TM or TE)
+EMULATION_2D_polarization_type_1 = "TM"
+     \end{lstlisting}
+   \end{block}
+
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{itemize}
+   \item Definition of angles for excitations with respect to local
+     spherical coordinate system with z axis along the cylinder axis
+     \begin{itemize}
+     \item Angles are transformed back and forth between local and
+       global axis. 
+     \end{itemize}
+
+   \item Definition of polarization as either ``TM'' or ``TE''
+     \begin{itemize}
+     \item Vector components (polarization) are transformed back and
+       forth between local and global axis.
+     \end{itemize}
+
+   \end{itemize}
+
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+   \begin{block}{Input file \url{farfield_EMULATION_2D.conf}} 
+      \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+!- Farfield mode (bistatic,monostatic)
+Bistatic
+!- Farfield component (|rE-longitudinal|, rE-longitudinal-real, rE-longitudinal-imag, rE-longitudinal-phase, |\
+rE-transverse|, rE-transverse-real, rE-transverse-imag, rE-transverse-phase, RCS, RCS-transverse, RCS-longitud\
+inal, RCS-dB, RCS-longitudinal-dB, RCS-transverse-dB, Monostatic-RCS, Monostatic-RCS-dB)
+RCS
+!- Frequency index and number of rhs
+1 1
+!- Rhs index
+1
+!- Rhs phase
+0
+!- Rhs amplitude
+1
+     \end{lstlisting}
+   \end{block}
+
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+   \begin{block}{Input file \url{farfield_EMULATION_2D.conf}} 
+      \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+!- Monitor number
+1
+!- Phi_cyl sampling points (num init stop)
+37 0 360
+!- RCS units                             
+sigma-lambda
+!- Array analysis (flag,num_elem_u,num_elem_v) 
+0 1 1                                                                            
+     \end{lstlisting}
+   \end{block}
+
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+   \begin{itemize}
+   \item Specialization to EMULATION 2D mode
+     \begin{itemize}
+     \item Farfield-mode: only scattering %(no ``Antenna'' support??)
+     \item Farfield-component: ``longitudinal'' and ``transverse''
+       components with respect to cylinder
+     \item \ldots
+     \end{itemize}
+     
+   \item Only the angles ``phi'' need to be defined for the plot (plot
+     asociated to the transversal plane to the cylinder (perpendicular
+     to its axis)
+
+   \item Array analysis: we keep it as it might be of interest to
+     consider finite 1D/2D periodic structures based on pseudo2D
+     cylinders
+
+   \end{itemize}
+
+
+  \end{frame}
+
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+  \begin{frame}[fragile,allowframebreaks]{Fortran Module}{\url{EMULATION_2D_scattering_module.F90} ---\alert{Update}---}
+
+    \begin{itemize}
+    \item Near field: {GreenD} derivatives are rewritten in a compact way
+      supporting computation of the scattering near field (within
+      FE-IIEE loop) for arbitraily oriented cylinders
+
+    \item Far field: Perfect agreement between numerical and analytical
+      solutions
+      \begin{itemize}
+      \item Well\ldots agreement up to a constant (not worried at all about it)
+      \end{itemize}
+    \end{itemize}
+
+  \end{frame}
+
+
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Far-field comparison (PEC and Coated PEC) with analytical solution
+
+  \input{FF_ex.tex}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{frame}[allowframebreaks]{Postprocesssing  changes}{Extra information in
+      nearfield}
+
+    \begin{block}{Changes in nearfield postprocessing}
+      \begin{itemize}
+      \item Added a 3-character string after \texttt{surf} to denote
+        the kind of boundary condition that surface is (DIR, NEU, NUL,
+        ABC,\ldots)
+      \item Added to the surface set the surfaces involved in FE-IIEE
+        method, denoted as \texttt{fe-iiee-local-ext}, and
+        \texttt{fe-iiee-local-int}, corresponding to $S$ and $S'$
+        surfaces respectively.
+      \end{itemize}
+
+    \end{block}
+
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \begin{center}
+      \includegraphics[width=\textwidth]{postprocessing_changes} 
+    \end{center}
+
+    
+  \end{frame}
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+  \begin{frame}[allowframebreaks]{Postprocesssing  changes}{Extra information in
+      nearfield ---\alert{Update}---}
+
+    \begin{columns}
+      \column{0.48\textwidth} \centering
+      {\includegraphics[angle=0,width=\textwidth]{hofem_new_postprocess.png}}
+      \column{0.48\textwidth}
+      {
+        \begin{itemize}
+        \item Included a new option to get all the available results for the 
+          near field.
+        \item Implemented as a new option called \texttt{all-xyz}.
+        \end{itemize}
+      }
+    \end{columns}
+    
+  \end{frame}
+    
+    % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[allowframebreaks]{Dielectric Coated Cylinders}{Comparison with the analytical solution }
+
+    
+    \begin{columns}
+      \column{0.5\linewidth}
+      \includegraphics[width=\linewidth]{results/TMc4/geometry.pdf}
+      
+      \column{0.45\linewidth}
+      \begin{itemize}
+      \item
+        Freq: 300\,MHz. ($\lambda=1\,$m)
+      \item
+        Thickness: 0.05\,m
+      \item
+        Dielectric substrate between $S$ and $S'$ with relative permittivity 
+        $\varepsilon_r$.
+      \end{itemize}
+    \end{columns}
+
+    \framebreak
+        
+    \hfill TM incident field $\varepsilon_r=1$ \hfill\mbox{}
+
+    \begin{columns}
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TM/E_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TM/E_S.pdf}
+      
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TM/H_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TM/H_S.pdf}
+      
+    \end{columns}
+    
+    \framebreak
+        
+    \hfill TM incident field $\varepsilon_r=4$ \hfill\mbox{}
+
+    \begin{columns}
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TMc4/E_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TMc4/E_S.pdf}
+      
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TMc4/H_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TMc4/H_S.pdf}
+      
+    \end{columns}
+    
+    \framebreak
+
+    \hfill TE incident field $\varepsilon_r=1$ \hfill\mbox{}
+    
+    \begin{columns}
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TE/E_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TE/E_S.pdf}
+      
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TE/H_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TE/H_S.pdf}
+      
+    \end{columns}
+
+    \framebreak
+
+    \hfill TE incident field $\varepsilon_r=1.5$ \hfill\mbox{}
+    
+    \begin{columns}
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TEc15/E_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TEc15/E_S.pdf}
+      
+      \column{0.35\linewidth}
+      \includegraphics[width=\linewidth]{results/TEc15/H_Sp.pdf}
+
+      \includegraphics[width=\linewidth]{results/TEc15/H_S.pdf}
+      
+    \end{columns}
+    
+
+
+
+
+  \end{frame}
+    
+  
+
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering    \Large{Extension to case of ``Oblique Incidence''}
+    
+  \end{frame}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[allowframebreaks]{Oblique Incidence}{---\alert{Update}---}
+
+  \begin{columns}
+    \column{0.3\textwidth} \centering
+    \includegraphics[angle=0,width=\textwidth]{RCS_cylinder_oblique_setup}
+    % figure 11.16 Balanis
+    % \footnotesize{}
+    
+    \column{0.65\textwidth} \centering
+   \begin{block}{Green Function}
+     % \begin{itemize}
+     % \item For any  $\theta_i$ we have
+       \begin{multline*}
+         G = \int_{-\infty}^{\infty} 
+        \dfrac{e^{-j k \sqrt{\rho^2+z^2}}}{4\pi \sqrt{\rho^2+z^2}}
+        \, e^{-j\beta_z z } \, dz \\
+        = 
+        \begin{cases}
+          \dfrac{1}{4j} H_0^{(2)}\left( \rho\sqrt{k^2-\beta_z^2}\right) 
+                  & \alert{k^2 > \beta_z^2} \\[2ex]
+          \dfrac{1}{2\pi} K_0^{(2)}\left( \rho\sqrt{k^2-\beta_z^2}\right) 
+                  & \beta_z^2 > k^2
+        \end{cases}
+      \end{multline*}
+      where $\beta_z=k\cos\theta_i < k$
+
+    % \item For $\theta_i=90^\circ$ (normal incidence) we have
+    %   $\beta_z=0$ and hence
+    %   \begin{equation*}
+    %     G = \dfrac{1}{4j} H_0^{(2)}(k|\rho|)
+    %   \end{equation*}
+
+    % \end{itemize}
+    \end{block}
+
+  \end{columns}
+
+
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{columns}
+    \column{0.3\textwidth} \centering
+    \includegraphics[angle=0,width=\textwidth]{RCS_cylinder_oblique_setup}
+    % figure 11.16 Balanis
+    % \footnotesize{}
+    
+    \column{0.65\textwidth} \centering
+    \begin{block}{Green Function}
+      \begin{itemize}
+      \item For any  $\theta_i$ we have
+        \begin{equation*}
+          G = \dfrac{1}{4j} H_0^{(2)}\left( \rho\sqrt{k^2-\beta_z^2}\right) 
+          = \dfrac{1}{4j} H_0^{(2)}\left( k|\rho|\sin\theta_i\right)
+        \end{equation*}
+        
+        
+        where $\beta_z=k\cos\theta_i < k$
+        
+      \item The particularization to $\theta_i=90^\circ$ (normal
+        incidence) yields to the well known result
+        % 
+        \begin{equation*}
+          G = \dfrac{1}{4j} H_0^{(2)}(k|\rho|)
+        \end{equation*}
+        
+      \end{itemize}
+    \end{block}
+  \end{columns}
+  
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  % \begin{columns}
+  %   \column{0.3\textwidth} \centering
+  %   \includegraphics[angle=0,width=\textwidth]{RCS_cylinder_oblique_setup}
+  %   % figure 11.16 Balanis
+  %   % \footnotesize{}
+    
+    % \column{0.65\textwidth} \centering
+    \begin{block}{FE-IIEE loop}
+      \begin{itemize}
+      \item As in the case of normal incidence
+        \begin{itemize}
+        \item We use {\GreenD}\footnote{We may also use {\GreenTEw}}
+          on the whole 3D slice and we divide  the scattered field
+          at each target point by the ``slice thickness''
+
+        \item We work with $\rho$ instead of $r$, i.e.,
+        %
+          \begin{equation*}
+            |\vrho-\vrhop|=|(\vr-\vrp)-((\vr-\vrp)\cdot\zunit)\zunit|
+          \end{equation*}
+        %
+          where $\zunit$ stands for the direction along the cylinder
+          axis\footnote{The code supports arbitrary orientations for the
+            cylinder}
+        \end{itemize}
+
+      \item But for oblique incidence we need to take into account the
+        relative ``height'' between $\vr$ and $\vrp$
+        % 
+        \begin{equation*}
+          e^{-j\beta_z|(\vr-\vrp)\cdot\zunit|}
+        \end{equation*}
+      \end{itemize}
+    \end{block}
+    
+    \begin{block}{In other words,}
+      
+      \begin{equation*}
+        G(|\vr-\vrp|) = \dfrac{1}{4j}
+        H_0^{(2)}\left( k|\vrho-\vrhop|\sin\theta_i\right) \,
+        e^{-j k \cos\theta_i |z-\zp|}
+      \end{equation*}
+
+      Remarks:
+      \begin{itemize}
+      \item Symbol $\zunit$ stands for the direction along the
+        cylinder axis
+      \item The code supports arbitrary orientations for the cylinder
+      \end{itemize}
+    \end{block}
+
+    \begin{itemize}
+    \item Implementation status:
+      \begin{itemize}
+      \item Coded
+      \item Not tested for oblique cylinder yet (requires PBCs)
+      \end{itemize}
+    \end{itemize}
+      
+%  \end{columns}    
+
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \large{A remark on dielectric (and dieliectric coated PEC) cylinders\ldots}
+    
+   \begin{block}{Dielectric cylinders (also dielectric coated PEC)}
+     \begin{itemize}
+     \item TM and TE are not longer solutions (\alert{polarizations are
+       coupled})  for oblique incidence
+
+   \item In the limit, with angle tending to normal incidence, the
+     polarizations are effectively decoupled
+
+   \item Analogously, TM and TE coupling appears also when using IBC (even
+     isotropic case) for oblique incidence
+
+     \end{itemize}
+   \end{block}
+
+  
+\end{frame}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Oblique Incidence}{Far Field
+    ---\alert{Update}---}
+
+  \begin{columns}
+    \column{0.3\textwidth} \centering
+    % AQUI PONER UNA FIGURA MODIFICADA DE ESTA CON SETUP FAR FIELD
+   \includegraphics[angle=0,width=\textwidth]{RCS_cylinder_oblique_setup}
+    \footnotesize{Far Field Setup}
+
+    
+    \column{0.65\textwidth} \centering
+   \begin{block}{Far Field }
+     \begin{itemize}
+     \item Green's function
+       \begin{equation*}
+        G_\text{far} \propto
+        e^{+j k \rho \sin\theta_i}\,
+        \underbrace{ e^{-j k \cos\theta_i z}}_{F_{1z}(z)}
+      \end{equation*}
+
+    \item Potential, fields
+      \begin{equation*}
+        \text{Potentials, fields } \propto
+        F_{2\phi}(k,\phi,\sin\theta_i) F_{2\theta}(\theta)
+      \end{equation*}
+      where
+      \begin{equation*}
+        F_{2\theta}(\theta) = \int_{-\infty}^\infty F_{1z}(z)e^{+j k \cos\theta z}
+        = \alert{\delta(\theta-(\pi-\theta_i))}
+      \end{equation*}
+    \end{itemize}
+    \end{block}
+
+  \end{columns}
+
+  \vspace{\baselineskip}
+  
+%  \begin{itemize}
+%  \item
+  \centering\parbox{0.9\linewidth}{\alert{Using far field version of {\GreenD} on a 3D
+      slice can be used to calculate $F_{2\phi}$ (the variation
+      with $\phi$ of the scattering field: RCS, scattering
+      width)} % symbol pulgar arriba
+  }
+    % \item When having a simulato  like HOFEM that uses FE-IIEE loop ....
+%  \end{itemize}
+
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{More precisely\ldots}
+    \begin{itemize}
+    \item Green's Function 
+
+      \begin{equation*}
+        G_\text{far} = \dfrac{1}{4j}
+        \left.
+          H_0^{(2)}\left( k\rho\sin\theta_i\right)
+        \right|_{k\rho\rightarrow\infty} \approx
+          \sqrt{\dfrac{2j}{\pi\rho\sin\theta_i}}
+        e^{-j k \rho \sin\theta_i}
+      \end{equation*}
+      
+    \end{itemize}
+
+  \end{block}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{Far Field Computation using 3D Slice}
+    \begin{itemize}
+    \item We use {\GreenD} on the whole 3D slice and we divide the
+      scattered field at each target point by the ``slice thickness''
+      
+    \item We need to take into account the $z$-dependence of the
+      3D (FEM) solution, i.e.,
+      % 
+      \begin{equation*}
+        \vE,\vH \propto   e^{j k \cos\theta_i z}
+      \end{equation*}
+      
+    \end{itemize}
+
+  \end{block}
+  
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{Far Field Algorithm:}
+  \end{block}
+  
+    \begin{enumerate}
+    \item We start from $\vJ$, $\vM$ on $S'$
+
+    \item We ``equalize'' $\vJ$, $\vM$ on $z$-dependence\footnote{The
+        ``equalization'' can alternatively be applied on the Greens's
+        Function}
+       %
+       \begin{align*}
+         \vJ &= \vJ \, e^{-j k \cos\theta_i z} \\
+         \vM &= \vM \, e^{-j k \cos\theta_i z} 
+       \end{align*}
+
+     \item We transform $\vJ$, $\vM$ to spherical coordinates on local
+       coordinate system attached to the cylinder
+       %
+       \begin{align*}
+         \vJ &\longrightarrow (J_\theta,J_\phi) \\
+         \vM &\longrightarrow (M_\theta,M_\phi) 
+       \end{align*}
+       
+       \begin{itemize}
+       \item Note that for normal incidence the local $\theta,\phi$
+         components are longitudinal $J_z$, $M_z$ and transverse
+         $J_\phi$, $M_\phi$ components, respectively
+       \end{itemize}
+
+       \saveenum
+
+    \end{enumerate}
+
+
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    
+    \begin{enumerate}
+      \resumeenum
+
+    \item We compute vector potentials $A_\theta$, $A_\phi$,
+      $F_\theta$, $F_\phi$
+      %
+      \begin{alignat*}{2}
+        J_\theta &\rightarrow A_\theta
+        & \qquad M_\theta &\longrightarrow F_\theta \\
+        J_\phi &\rightarrow A_\phi
+        & \qquad M_\phi &\longrightarrow F_\phi
+      \end{alignat*}
+      
+
+    \item and from vector potentials we compute the far field components
+      %
+      \begin{equation*}
+        (A_\theta,A_\phi,F_\theta,F_\phi) \longrightarrow (E_\theta,E_\phi,H_\theta,H_\phi)
+      \end{equation*}
+
+    \item We do not forget to divide by ``slice thickness''
+      %
+      \begin{equation*}
+        (E_\theta,E_\phi,H_\theta,H_\phi) \longrightarrow
+             (E_\theta,E_\phi,H_\theta,H_\phi) \, / \, \text{``slice thickness''}
+      \end{equation*}
+      
+    \item Due to decomposition of currents in \alert{local} $\theta$ and $\phi$
+      components, we can \alert{naturally obtain the TM and TE components}, i.e.,
+      %
+      \begin{align*}
+        (E_\theta,H_\phi) &\longrightarrow \text{TM} \\
+        (E_\phi,H_\theta) &\longrightarrow \text{TE} 
+      \end{align*}
+
+    \end{enumerate}
+    
+    \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \begin{block}{Scattering Width $\sigma$}
+      \begin{equation*}
+        \sigma =
+        \begin{bmatrix}
+          \sigma_{\text{(TM,TM)}} & \sigma_{\text{(TM,TE)}} \\
+          \sigma_{\text{(TE,TM)}} & \sigma_{\text{(TE,TE)}} 
+        \end{bmatrix}
+      \end{equation*}
+
+      \begin{itemize}
+      \item Note that for PEC cylinders we have
+        $\sigma_{\text{(TM,TE)}}=\sigma_{\text{(TE,TM)}}=0$
+      \end{itemize}
+      
+    \end{block}
+
+
+    \vspace{\baselineskip}
+   
+    
+    \begin{itemize}
+    \item Implementation status:
+      \begin{itemize}
+      \item Coded
+      \item Not tested for oblique cylinder yet (requires PBCs)
+      \end{itemize}
+    \end{itemize}
+    
+\end{frame}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile,allowframebreaks]{Integration EMULATION\_2D and PBCs}{Far Field}
+
+  \begin{block}{Logic for Oblique Incidence
+      ---\alert{In progress
+        (barely initiated)}---}
+    \begin{itemize}
+    \item \verb|cylinder_axis| and \verb|slice_thickness| obtained  from
+      PBC module
+
+    \item Angle of incidence set up in file \url{.em}
+      \begin{itemize}
+      \item Discard PBC info in file \url{.em}:
+        \verb|periodic_phi_angle|, \verb|periodic_theta_angle|
+      \item PBC $\longleftarrow$ EMULATION\_2D info from file
+        \begin{itemize}
+        \item Example: \verb|EMULATION_2D_exterior_angles_1 = {45,140}|
+        \end{itemize}
+      \end{itemize}
+
+    \item Normal incidence can be run as a particular case
+    \end{itemize}
+  \end{block}
+  
+
+%  REMARK: 
+  \begin{itemize}
+  \item If \verb|enabled_normal_incidence| there is no PBC interaction (\alert{coded and working})
+    \begin{itemize}
+    \item \verb|cylinder_axis| and \verb|slice_thickness| read from
+      file \url{.em}\footnote{Nevertheless, that information could be
+        obtained by preprocessing the mesh within HOFEM code (extra
+        task, not considered at present)}
+    \item Angle of incidence set up in file \url{.em}:
+      \begin{itemize}
+      \item Example: \verb|EMULATION_2D_exterior_angles_1 = {90,140}|
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+
+  
+\end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain,label=MPI]
+    \centering    \Large{MPI related issues}
+  \end{frame}
+
+\input{MPI_related}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain,label=Ewald1D]
+    \centering    \Large{Ewald (1D periodicity)}
+  \end{frame}
+
+\input{Ewald_1D}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+  
+\end{document}
+
+@
+
+
+1.3
+log
+@Summary: anadido resultados de TE (comparados con TM) y minima ilustración de modulo fortran de EMULATION_2D
+@
+text
+@d2 1
+a2 1
+% $Id: HOFEM_2D_emulation_tr.tex,v 1.2 2022/07/01 13:10:36 luise Exp luise $
+d23 2
+d45 4
+d97 1
+a97 1
+\graphicspath{{./figures/}{./figures_Issue_field_tangential_at_PEC_non_zero/}}
+d101 1
+a101 1
+\rcsInfo $Id: HOFEM_2D_emulation_tr.tex,v 1.2 2022/07/01 13:10:36 luise Exp luise $
+d421 6
+a426 1
+      \item No need of infinite sum (\alert{far field {\GreenT} is enough})
+a472 7
+    \begin{itemize}
+      \item \alert{Using far field version of {\GreenT} on a 3D slice allows
+        to calculate the variation with $\phi$ of the scattering field
+        (RCS, scattering width)} % symbol pulgar arriba
+%      \item When having a simulato  like HOFEM that uses FE-IIEE loop ....
+      \end{itemize}
+      
+d1150 1
+a1150 1
+    \item \alert{But it is NOT} \ldots at present studying the subject
+d1165 1
+a1165 1
+    \centering    \Large{From our last meeting we did \ldots}
+d1226 1
+a1226 1
+  \begin{frame}[fragile,allowframebreaks]{Fotran Module}{\url{EMULATION_2D_scattering_module.F90}}
+a1277 2
+     \item \alert{NOT true always (e.g., dielectric coated cylinder)}
+       ---see later---
+d1287 155
+a1441 1
+  \begin{frame}[allowframebreaks]{Postprocessing}{Extra information in
+d1465 20
+d1488 1
+a1488 1
+  \begin{frame}{Dielectric Coated Cylinders}{Study of the analytical solution}
+d1490 6
+a1495 1
+    \begin{block}{Features \& Implications}
+d1497 17
+a1513 2
+      \item \alert{TM and TE are not longer solutions (polarizations are
+        coupled)  for oblique incidence}
+d1515 4
+a1518 2
+    \item In the limit, with angle tending to normal incidence, the
+      polarizations are effectively decoupled
+d1520 11
+a1530 2
+    \item Analogously, TM and TE coupling appears also when using IBC (even
+      isotropic case) for oblique incidence
+d1532 42
+a1573 2
+      \end{itemize}
+    \end{block}
+d1575 4
+d1610 1
+a1610 1
+\begin{frame}[allowframebreaks]{Oblique Incidence}
+d1619 3
+a1621 3
+   \begin{block}<+->{Green Function}
+     \begin{itemize}
+     \item For any  $\theta_i$ we have
+d1636 82
+a1717 2
+    \item For $\theta_i=90^\circ$ (normal incidence) we have
+      $\beta_z=0$ and hence
+d1719 3
+a1721 1
+        G = \dfrac{1}{4j} H_0^{(2)}(k|\rho|)
+d1724 14
+d1739 17
+a1755 1
+    \end{block}
+d1757 2
+a1758 1
+  \end{columns}
+d1760 1
+d1765 2
+a1766 1
+\begin{frame}[allowframebreaks]{Oblique Incidence}{Far Field}
+d1804 2
+a1805 2
+  \centering\parbox{0.9\linewidth}{\alert{Using far field version of {\GreenT} on a 3D
+      slice could be used to calculate $F_{2\phi}$ (the variation
+d1811 43
+d1855 101
+d1958 57
+d2018 8
+d2027 1
+d2029 1
+@
+
+
+1.2
+log
+@Summary: anadidas slides issue representacion campo en superficies con HOFEM+GiD
+@
+text
+@d2 1
+a2 1
+% $Id: HOFEM_2D_emulation_tr.tex,v 1.1 2022/07/01 12:14:37 luise Exp luise $
+d95 1
+a95 1
+\rcsInfo $Id: HOFEM_2D_emulation_tr.tex,v 1.1 2022/07/01 12:14:37 luise Exp luise $
+d581 1
+a581 1
+    identical (not tested).
+d936 3
+a938 1
+  \begin{frame}[allowframebreaks]{Effect of ``Thickness''}{FEM solution}
+d969 2
+d972 3
+a974 3
+    \item The main factor for error with {\GreenT}
+      \item {\GreenD} behaves great!
+      \item Always lower error  with thin slices% (although convergence is slow)
+d985 1
+a985 1
+%  \begin{comment} %%%%%%%  POR HACER
+d1016 1
+a1016 1
+%  \end{comment} %%%%%%%%
+a1155 1
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+d1158 173
+d1448 1
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+a2 1
+% $Id$
+d95 1
+a95 1
+\rcsInfo $Id: MTAC_MasterDays_2020.tex,v 1.1 2020/05/12 05:54:23 luise Exp luise $
+d693 3
+a695 1
+    \item Components $E_x$, $E_z$, $H_y$ are not null
+d715 21
+d737 39
+@

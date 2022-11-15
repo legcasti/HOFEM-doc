@@ -1,0 +1,156 @@
+% $Id$
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Estilo de los últimos años con linea azul al borde
+
+% \mode<presentation>
+% {
+% %  \usetheme{Warsaw}
+%   \usetheme{Boadilla}
+
+%   \setbeamercovered{transparent}
+%   % or whatever (possibly just delete it)
+
+% \setbeamertemplate{navigation symbols}{}
+
+% }
+
+% \useoutertheme{uc3mcourse_updated2020} % curso de uc3m
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Estilo de Sergio en traspas Radar, campos, etc
+
+\usetheme{uc3m}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\setbeameroption{show notes on second screen=bottom}
+
+%\setbeamersize{text margin right=0.1\linewidth,text margin left=0.1\linewidth}
+
+\setbeamertemplate{frametitle continuation}[from second]
+
+% \usepackage[spanish,es-noquoting,es-nolists,es-noshorthands]{babel}
+%  \decimalpoint % utilizamos punto como separador decimal
+%  \deactivatetilden % Desactiva abreviaciones ~n y ~N que dan muchos problemas.
+% % %                Por ejemplo, con abreviaciones de bibtex como M.~N. Vouvakis
+\usepackage[english]{babel}
+% or whatever
+
+% Tikz y derivados
+%\input{preamble_tr_tikz}
+
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+% or whatever
+
+%\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+%\usepackage{times}
+%\usepackage{lmodern}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amscd} % conmutative diagrams 
+\usepackage{latexsym}
+
+\usepackage{pifont}
+
+
+\usepackage{verbatim}
+\usepackage{listings}
+
+  \lstdefinestyle{myFORTRANcode}
+    {language=[90]Fortran,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{brown}\ttfamily,
+    commentstyle=\color{red}\ttfamily,
+    tabsize=2,
+%    frame=single,
+%    backgroundcolor=\color{yellow},
+    breaklines=true,breakatwhitespace=true,prebreak=\space\&
+  }
+  \lstdefinestyle{myFORTRANcodeS} % S as "small" 
+    {language=[90]Fortran,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{brown}\ttfamily,
+    commentstyle=\color{red}\ttfamily,
+    tabsize=2,
+%    frame=single,
+%    backgroundcolor=\color{yellow},
+    breaklines=true,breakatwhitespace=true,prebreak=\space\&
+  }
+
+  \lstdefinestyle{myFORTRANcodeOpenMP}
+    {language=[90]Fortran,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{brown}\ttfamily,
+    commentstyle=\color{red}\ttfamily,
+    morecomment=[l]{\$},
+    tabsize=2,
+%    frame=single,
+%    backgroundcolor=\color{yellow},
+    breaklines=true,breakatwhitespace=false,prebreak=\space\&
+  }
+
+
+\usepackage{graphicx}
+\usepackage{subfig}
+%\usepackage{subfigure}
+
+
+\usepackage{xmpmulti}
+
+\usepackage{notacion}
+
+\usepackage{def_listas}
+
+\usepackage{pdfpages}
+
+\usepackage{multimedia}
+
+\usepackage{array}  % Para tablas
+\newcolumntype{C}{>{$}c<{$}} % Identificadores de columna en math mode
+\newcolumntype{L}{>{$}l<{$}}
+\newcolumntype{R}{>{$}r<{$}}
+
+%\setlength{\arrayrulewidth}{0.5mm}
+%\setlength{\tabcolsep}{18pt}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{1.5}
+
+
+\newcommand{\vbs}{\vspace{\baselineskip}}
+\newcommand{\vbss}{\vspace{0.5\baselineskip}}
+\newcommand{\vbsf}{\vspace*{\baselineskip}}
+\newcommand{\vbssf}{\vspace*{0.5\baselineskip}}
+\newcommand{\FIGURA}[1]{\vspace*{2\baselineskip} \centering{FIGURA \\ #1} \vspace*{2\baselineskip} } 
+
+
+\newcommand{\crule}{{\color{cyan} \hrule} }
+
+\setcounter{tocdepth}{4}
+
+% El paquete enumitem redefine las listas de Beamer:
+%\usepackage{enumitem}
+% \setitemize{label=\usebeamerfont*{itemize item}%
+%    \usebeamercolor[fg]{itemize item}
+%    \usebeamertemplate{itemize item}}
+
+% Alternativa:
+\newcounter{saveenumi}
+\newcommand{\seti}{\setcounter{saveenumi}{\value{enumi}}}
+\newcommand{\conti}{\setcounter{enumi}{\value{saveenumi}}}
+\resetcounteronoverlays{saveenumi}
+
+
+

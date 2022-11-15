@@ -1,0 +1,263 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% $Id: HOFEM_2D_emulation_tr.tex,v 1.4 2022/11/08 14:28:02 luise Exp luise $
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Transparencias para reunión de seguimiento HOFEM-AIRBUS sobre "2D
+% Emulation" en HOFEM
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Magia para que el acrobat reader lea bien el documento.
+%\pdfobjcompresslevel=1
+
+%\documentclass[notes,smaller,xcolor=table,dvipsnames]{beamer}
+\documentclass[smaller,xcolor=table,dvipsnames]{beamer}
+
+%\documentclass[notes,smaller,xcolor=table,dvipsnames,trans]{beamer}
+%\documentclass[smaller,xcolor=table,dvipsnames,trans]{beamer}
+
+%documentclass[notes,smaller,xcolor=table,dvipsnames,handout,hyperref={bookmarks=false}]{beamer}
+%\documentclass[smaller,xcolor=table,dvipsnames,handout,hyperref={bookmarks=false}]{beamer}
+
+%Ver uso de oprion onlyslideswithnotes  que no me parece funcionar
+
+%\hypersetup{colorlinks=true,linkcolor=purple}
+%\hypersetup{colorlinks=true,allcolors=purple}
+
+%\includeonlyframes{current}
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+%  \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+%  \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+  \nofiles
+}
+
+\usepackage{ifthen}
+% \newboolean{ARCS} % Requiere package ``ifthen''
+% \setboolean{ARCS}{FALSE} % Si true se personaliza algo para el curso
+%                         % ARCS (antennas and RCS del MasteEADS)
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{preamble_tr}
+\newcounter{savedenum}
+\newcommand*{\saveenum}{\setcounter{savedenum}{\theenumi}}
+\newcommand*{\resumeenum}{\setcounter{enumi}{\thesavedenum}}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Líneas para hacer versión con "notes" comentando cada traspa
+%  Comentar las líneas para versión sin notes
+
+% \usepackage{pgfpages}
+
+% \setbeamertemplate{note page}[plain]
+% \setbeameroption{show notes on second screen=bottom}
+% \makeatletter
+% \def\beamer@setupnote{%
+%   \gdef\beamer@notesactions{%
+%     \beamer@outsideframenote{%
+%       \beamer@atbeginnote%
+%       \beamer@notes%
+%       \ifx\beamer@noteitems\@empty\else
+%       \begin{itemize}\itemsep=0pt\parskip=0pt%
+%         \beamer@noteitems%
+%       \end{itemize}%
+%       \fi%
+%       \beamer@atendnote%
+%     }%
+%     \gdef\beamer@notesactions{}%
+%   }
+% }
+% \makeatother
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\GreenT}{\url{Green3D}}
+\newcommand{\GreenD}{\url{Green2D}}
+\newcommand{\GreenTEw}{\url{Green3D_Ewald}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Controla si se genera una version para alumno
+% o no. En la version para alumno se omiten algunos detalles
+\newboolean{alumno} % Requiere package ``ifthen'' 
+%\setboolean{alumno}{TRUE}
+\setboolean{alumno}{FALSE}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\dirinputtex}{./inputtex}
+
+\graphicspath{{./figures/}{./figures_Issue_field_tangential_at_PEC_non_zero/}{./Ewald}}
+\lstset{inputpath=./code_output}
+
+\usepackage[nofancy]{rcsinfo}
+\rcsInfo $Id: HOFEM_2D_emulation_tr.tex,v 1.4 2022/11/08 14:28:02 luise Exp luise $
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title[HOFEM-AIRBUS(v{\rcsInfoRevision})]{HOFEM-AIRBUS 2D Emulation}
+
+%\date[]{}%{Version {\rcsInfoRevision}, checked out \today}
+
+% \author[GREMA-TSC-UC3M]{Luis E.\ Garcia-Castillo \\
+%   \url{legcasti@ing.uc3m.es}}
+
+\author[]{-June 7th 2022---}
+
+\author{}
+
+\date[]{\small{%
+    Group of Radiofrequency, Electromagnetism, Microwaves \\ and Antennas (GREMA) \\    \url{http://grema.webs.tsc.uc3m.es/}
+ \\[0.8\baselineskip]
+    % 
+    Departamento de Teoría de la Señal y Comunicaciones (TSC) \\
+    Universidad Carlos III de Madrid, Spain \\
+  }}
+
+% \date[]{\small{%
+%     Departamento de Teoría de la Señal y Comunicaciones (TSC) \\
+%     Universidad Carlos III de Madrid, Spain \\
+% }}
+
+\institute{Contact: Luis Emilio García-Castillo
+  \url{legcasti@ing.uc3m.es}, Adrián Amor \url{aamor@ing.uc3m.es}, Sergio Llorente \url{sollorent@ing.uc3m.es}}
+
+%\date{}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each section:
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>[allowframebreaks]{Outline}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
+% \AtBeginSubsection[]
+% {
+%   \begin{frame}<beamer>{Outline}
+%     \tableofcontents[currentsection,currentsubsection]
+%   \end{frame}
+% }
+
+%\AtBeginPart{\frame{\partpage}}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Ya esta definido comando en el fichero de preambulo.
+% \newcommand{\FIGURA}[1][]{\vspace*{2\baselineskip}\alert{FIGURA!!!} #1\vspace*{2\baselineskip}}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+  \newcommand*{\meshCCC}[3]{cylinder_sp_circled_s_circled_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshCSS}[3]{cylinder_sp_squared_s_squared_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshPS}[3]{cylinder_sp_pec_s_squared_d_#1_h_#2_m_#3.em.mesh}
+  \newcommand*{\meshPC}[3]{cylinder_sp_pec_s_circled_d_#1_h_#2_m_#3.em.mesh}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% \begin{frame}[allowframebreaks]{Outline}
+%   \tableofcontents
+% \end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering \Large{We start considering the use of {\GreenT} or
+      {\GreenD} the scattering of inifinite cylinders using 3D
+      simulator on a section (``slice'') of the cylinder}
+    
+  \end{frame}
+
+  \input{\dirinputtex/Green3D_vs_Green2D}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain,label=Ewald1D]
+    \centering    \Large{Details on Ewald (1D periodicity)}
+  \end{frame}
+
+\input{\dirinputtex/Ewald_1D}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  \begin{frame}[plain]
+    \centering    \Large{Fortran Module \url{EMULATION_2D_scattering_module.F90}}
+    
+  \end{frame}
+  
+  \input{\dirinputtex/Fortran_Module_EMULATION_2D}
+  
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering    {Until now we were considering normal incidence to the cylinder}
+
+    {Now we consider the extension to case of ``Oblique
+      Incidence''}
+    
+  \end{frame}
+
+  \input{\dirinputtex/Oblique_incidence}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering \Large{Modifications relative to postprocessing (near
+      field)}
+    
+  \end{frame}
+  
+  \input{\dirinputtex/postprocess_nearfield}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain,label=MPI]
+    \centering    \Large{MPI related issues}
+  \end{frame}
+
+\input{\dirinputtex/MPI_related}
+  
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+
+  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+  
+\end{document}
+

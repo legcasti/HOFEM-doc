@@ -1,0 +1,8 @@
+            Iteration:  1. (err 7.40E-02)             0.288 [sec]
+            Iteration:  2. (err 6.64E-03)             0.286 [sec]
+            Iteration:  3. (err 6.91E-04)             0.275 [sec]
+            Iteration:  4. (err 7.32E-05)             0.272 [sec]
+            Iteration:  5. (err 7.79E-06)             0.272 [sec]
+            Iteration:  6. (err 8.29E-07)             0.272 [sec]
+            Iteration:  7. (err 8.80E-08)             0.272 [sec]
+            Iteration:  8. (err 9.33E-09)             0.275 [sec]

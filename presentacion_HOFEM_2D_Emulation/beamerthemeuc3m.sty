@@ -1,0 +1,200 @@
+%A.G.L. 15/10/2015
+
+% LEGC (luise): 13/May/2020
+
+% SLR (Sergio Llorente Romano): Dec 2020 
+
+%%% http://tex.stackexchange.com/questions/73496/syntax-error-pgfuseimage
+%%% Filenames with underscores trigger "! Missing $ inserted" errors
+%%% PATCH STARTS
+\makeatletter
+\let\original@pgf@declareimage\pgf@declareimage
+\def\pgf@declareimage[#1]#2#3{%
+  \def\temppatch@declareimage{\original@pgf@declareimage[#1]{#2}}%
+  \edef\temppatch@declareimagearg{#3}%
+  \expandafter\temppatch@declareimage\expandafter{\detokenize\expandafter{\temppatch@declareimagearg}}%
+}
+\makeatother
+%%% PATCH ENDS    
+
+\usepackage{tikz}
+\AtBeginDocument{
+    \providecommand\tikzexternaldisable{\relax}
+    \providecommand\tikzexternalenable{\relax}
+}
+
+%\mode<presentation>
+\mode<all>
+
+\usetheme{Boadilla}
+\setbeamertemplate{navigation symbols}{}
+%\setbeamersize{text margin left=32pt}
+%\setbeamersize{text margin right=32pt}
+
+\definecolor{uc3mblue}{RGB}{49,43,110}
+\setbeamercolor{palette primary}{bg=uc3mblue}
+\setbeamercolor{palette secondary}{bg=gray}
+\setbeamercolor{structure}{fg=uc3mblue,bg=}
+\setbeamercolor{head/foot}{fg=, bg=}
+\setbeamercolor{title}{fg=black, bg=}
+\setbeamercolor{subtitle}{fg=black, bg=}
+\setbeamercolor{author}{fg=black, bg=}
+\setbeamercolor{institute}{fg=uc3mblue, bg=}
+\setbeamercolor{date}{fg=green, bg=}
+
+% Font sizes: cover slide
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\footnotesize}
+%\setbeamerfont{title}{size*={30}{40}}
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{subtitle}{size=\Large}
+
+% Font sizes: standard slides
+%\setbeamerfont{frametitle}{size=\LARGE}
+%\setbeamerfont{framesubtitle}{size=\normalsize}
+%\setbeamerfont{head/foot}{size=\scriptsize}
+
+% Itemize and enumerate
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+
+\pgfdeclareimage[width=0.5\paperwidth]{logo-frametitle}{logo_uc3m_1l.pdf}
+\pgfdeclareimage[width=0.3\paperwidth]{logo-foot}{logo_uc3m_1l.pdf}
+
+\pgfdeclareimage[width=0.12\paperwidth]{logo-foot2}{logo_GREMA.png}
+
+
+\pgfdeclareimage[width=1\paperwidth]{mybackground}{./figures/background_campus_Leganes.png}
+
+
+%\pgfdeclareimage[width=1\paperwidth]{mybackground}{./figures/sphere_creeping_magnitude_total_1l.pdf}
+% \pgfdeclareimage[width=1\paperwidth]{mybackground}{./figures/sphere_creeping_real_total_043l.pdf}
+% \pgfdeclareimage[width=1\paperwidth]{mybackground}{./figures/sphere_creeping_real_total_1l.pdf}
+% \pgfdeclareimage[width=1\paperwidth]{mybackground}{./figures/sphere_creeping_magnitude_total_043l.pdf}
+
+
+
+
+
+\defbeamertemplate*{frametitle}{uc3m theme}
+{
+  %\rightskip=0.33\paperwidth%
+  % Title
+  \usebeamercolor[fg]{frametitle}
+  \usebeamerfont{frametitle}
+  \insertframetitle
+  \par
+  \vspace{1pt}
+  % Subtitle
+  \usebeamercolor[fg]{frametitle}
+  \usebeamercolor[fg]{framesubtitle}
+  \usebeamerfont{framesubtitle}
+  \insertframesubtitle
+  \par
+}
+
+
+%\defbeamertemplate*{headline}{uc3m theme}
+%{
+%    \usebeamerfont{head/foot}
+%    \begin{beamercolorbox}[wd=0.8\paperwidth, ht=40pt, dp=0ex, left]{head/foot}%
+%        \leftskip=30pt
+%        \insertshorttitle
+%    \end{beamercolorbox}
+%    \hfill
+%    \begin{beamercolorbox}[wd=0.1\paperwidth, ht=-40pt, dp=10pt, right]{head/foot}%
+%        \rightskip=30pt
+%        Confidential
+%    \end{beamercolorbox}%
+%}
+
+
+\defbeamertemplate*{footline}{uc3m theme}
+{
+    \begin{beamercolorbox}{}
+        \begin{beamercolorbox}[wd=.20\paperwidth,left]{head/foot}%
+            \leftskip=5pt
+            \raisebox{-2pt}{\pgfuseimage{logo-foot2}}
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.60\paperwidth,center]{head/foot}%
+            %\leftskip=5pt
+            \raisebox{-2pt}{\pgfuseimage{logo-foot}}
+        \end{beamercolorbox}%
+        \hfill
+        \begin{beamercolorbox}[wd=.10\paperwidth,dp=3pt,center]{head/foot}%
+            \rightskip=5pt
+            \usebeamerfont{head/foot}
+            \insertframenumber{}\,/\,\inserttotalframenumber{}%
+        \end{beamercolorbox}%
+    \end{beamercolorbox}%
+}
+
+
+\setbeamertemplate{title page}
+{
+    \thispagestyle{empty}
+      \begin{tikzpicture}[overlay, remember picture]
+        \node[anchor=north] at (current page.north)
+        {
+          \pgfuseimage{mybackground}
+        };
+      \end{tikzpicture}
+  
+      % Background / logos, independent from text
+    \tikzexternaldisable
+    \begin{tikzpicture}[remember picture, overlay, inner sep=0]
+        \node[anchor=south, yshift=8mm] at (current page.south) {
+          \pgfuseimage{logo-frametitle}
+         };
+         \node[anchor=south, yshift=2mm] at (current page.south) {
+           \pgfuseimage{logo-foot2}           
+         };
+         \node[anchor=south, yshift=14mm] at (current page.south) {
+        \usebeamerfont{institute}
+        \usebeamercolor[fg]{institute}
+        \textcolor{red}{\insertinstitute}\par
+         };
+
+        
+    \end{tikzpicture}    
+    \tikzexternalenable
+ 
+    % Text elements
+    \setbeamercolor{coloredboxstuff}{fg=yellow,bg=white!80!uc3mblue}
+
+    \hfill
+    \begin{beamercolorbox}[wd=0.9\textwidth]{title}
+        %\vspace{0.05\textheight}
+      \begin{flushleft}
+        \usebeamerfont{title}
+        \usebeamercolor[fg]{title}
+        \textcolor{white}{\textbf{\inserttitle}} %\par
+        % Insert the subtitle, if it exists
+        \ifx\insertsubtitle\empty
+        \else
+          \usebeamerfont{subtitle} 
+          \smallskip
+          \insertsubtitle\par
+        \fi
+    %\end{beamercolorbox}
+        \par
+        \bigskip
+        \medskip
+%
+    %\hfill
+    \pgfsetfillopacity{0.65}
+    \begin{beamercolorbox}[wd=0.75\textwidth, rounded=true]{coloredboxstuff}
+    \pgfsetfillopacity{1}
+        \usebeamerfont{author}
+        \usebeamercolor[fg]{author}
+        \textcolor{white}{\insertauthor}\par
+        %\bigskip
+        \usebeamerfont{date}
+        \textcolor{uc3mblue}{\bfseries\insertdate}\par
+        \medskip
+    \end{beamercolorbox}
+      \end{flushleft}
+    \end{beamercolorbox}
+    \vfill
+}

@@ -1,0 +1,4 @@
+            Iteration:  1. (err 6.10E-03)             5.746 [sec]
+            Iteration:  2. (err 5.53E-05)             5.712 [sec]
+            Iteration:  3. (err 5.68E-07)             5.752 [sec]
+            Iteration:  4. (err 6.06E-09)             5.932 [sec]

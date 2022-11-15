@@ -1,0 +1,197 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% $Id$
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Set de slides dedicadas a MPI related issues
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile,allowframebreaks]{EMULATION\_2D MPI Broadcast}
+
+  \begin{itemize}
+  \item From FREQ-SWEEP to POST-MODE we write and read from disk 
+%
+    \begin{block}{Write to Disk}
+    \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   SUBROUTINE write_EMULATION_2D_data_structure(filename)
+     
+     CHARACTER(LEN=*), INTENT(IN) :: filename
+     INTEGER:: ierror,fileunit
+     
+     OPEN(NEWUNIT=fileunit, FILE=filename, STATUS="REPLACE", ACTION="WRITE", FORM="UNFORMATTED",IOSTAT=ierror)
+     IF (ierror /= 0) THEN
+        CHKERRQ(ierror,' write_EMULATION_2D_data_structure: Error opening file')
+     ENDIF
+     WRITE(fileunit,IOSTAT=ierror)  EMULATION_2D_scattering_structure
+     
+     CLOSE(fileunit)
+     
+   END SUBROUTINE write_EMULATION_2D_data_structure
+ \end{lstlisting}
+\end{block}
+ 
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{block}{Read from Disk}
+   \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   SUBROUTINE read_EMULATION_2D_data_structure(filename)
+
+     CHARACTER(LEN=*), INTENT(IN) :: filename
+     INTEGER:: ierror,fileunit
+
+     OPEN(NEWUNIT=fileunit, FILE=filename, STATUS="OLD", ACTION="READ", FORM="UNFORMATTED",IOSTAT=ierror)     
+     IF (ierror /= 0) THEN
+        CHKERRQ(ierror,' read_EMULATION_2D_data_structure: Error opening file')
+     ENDIF
+     READ(fileunit,IOSTAT=ierror)  EMULATION_2D_scattering_structure
+     
+     CLOSE(fileunit)
+
+   END SUBROUTINE read_EMULATION_2D_data_structure
+ \end{lstlisting}
+\end{block}
+
+\framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item MPI communication between processes within POST-MODE
+  \begin{itemize}
+  \item At present it is simply by all MPI processes reading the
+    EMULATION\_2D data structure from disk (and not only process~0)
+
+  \item \alert{Use of custom MPI datatypes} (simple prototype under
+    test at present)
+    \begin{itemize}
+    \item One MPI call: low latency, readability of the code
+    \item Maintenability of the code: routines defined on each module
+      to create MPI datatype associated to each derived datatype.
+    \end{itemize}
+  \end{itemize}
+
+  
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{block}{Fortran Derived DataType}
+     \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   ! Derived type to test MPI_Type_create_struct
+   TYPE :: my_derived_type_def
+      LOGICAL :: mylogical = .TRUE.
+      CHARACTER(len=4) :: mystring = 'hola'
+      REAL(KIND=DBL) :: myreal = 1.0_DBL
+   END TYPE my_derived_type_def
+
+   TYPE(my_derived_type_def) :: my_derived_type   
+     \end{lstlisting}
+   \end{block}
+   
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+\begin{block}{MPI datatype creation (MPI\_Type\_create\_struct) \insertcontinuationtext}   
+\begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   !! Creamos el MPI Datatype que se use para pasar el tipo derivado
+   !! entre procesos MPI
+
+   CALL MPI_GET_ADDRESS(my_derived_type,address(1), ierror)
+   CALL MPI_GET_ADDRESS(my_derived_type%mylogical,address(2), ierror)
+   CALL MPI_GET_ADDRESS(my_derived_type%mystring,address(3), ierror)
+   CALL MPI_GET_ADDRESS(my_derived_type%myreal,address(4), ierror)
+
+   DO i=1,COUNT
+      ! MPI-3.0 & former: disp = iaddr(i+1)-iaddr(i)
+      displacements(i) = MPI_Aint_diff(address(i+1),address(i))
+   ENDDO
+
+   typelist(1) = MPI_LOGICAL
+   typelist(2) = MPI_CHARACTER
+   typelist(3) = MPI_DOUBLE_PRECISION
+ \end{lstlisting}
+\end{block}
+
+
+
+\begin{block}{MPI datatype creation (MPI\_Type\_create\_struct) \insertcontinuationtext}   
+\begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   block_lengths(1)=1
+   block_lengths(2)=4
+   block_lengths(3)=1
+
+   ! build the derived data type
+   call MPI_Type_create_struct(COUNT,block_lengths,displacements,&
+        typelist, my_mpi_derived_type_def,ierr)
+   if (ierr /= 0 ) then
+      print *, 'got an error in type create: ', ierr
+      call MPI_Abort(MPI_COMM_WORLD, ierr, ierr)
+   endif
+
+     \end{lstlisting}
+   \end{block}
+   
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+\begin{block}{Use of MPI datatype in MPI calls}   
+\begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   ! commit it to the system, so it knows we ll use it
+   ! for communication
+   call MPI_TYPE_COMMIT(my_mpi_derived_type_def)
+   if (ierr /= 0 ) then
+      print *, 'got an error in type commit: ', ierr
+      call MPI_Abort(MPI_COMM_WORLD, ierr, ierr)
+   endif
+
+   ! use it
+   call MPI_BCAST(my_derived_type,1,my_mpi_derived_type_def,0,MPI_COMM_WORLD,ierr)
+ \end{lstlisting}
+\end{block}
+
+ \begin{block}{Free MPI datatype created}   
+\begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+   ! We free the MPI Datatype created
+   call MPI_TYPE_FREE(my_mpi_derived_type_def,ierr)
+ \end{lstlisting}
+\end{block}
+
+
+\end{itemize}
+
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile,allowframebreaks]{MPI Fortran interfaces}
+
+ \begin{block}{USE mpi\_f08}
+  \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+    USE mpi_f08
+   !! It requires compile-time argument checking with unique MPI
+   !! handle types and provides techniques to fully solve the
+   !! optimization problems with nonblocking calls. This is the only
+   !! Fortran support method that is consistent with the Fortran
+   !! standard (Fortran 2008 + TS 29113 and later). This method is
+   !! highly recommended for all MPI applications.
+ \end{lstlisting}
+\end{block}
+
+
+ \begin{block}{USE mpi}
+  \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+    USE mpi 
+   !! It requires compile-time argument checking. Handles are defined
+   !! as INTEGER. This Fortran support method is inconsistent with the
+   !! Fortran standard, and its use is therefore not recommended.
+ \end{lstlisting}
+\end{block}
+
+
+ \begin{block}{INCLUDE 'mpif.h'}
+  \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\footnotesize]
+    INCLUDE 'mpif.h'
+   !!  The use of the include file mpif.h is strongly discouraged
+   !!  starting with MPI-3.0, because this method neither guarantees
+   !!  compile-time argument checking nor provides sufficient
+   !!  techniques to solve the optimization problems with nonblocking
+   !!  calls, and is therefore inconsistent with the Fortran standard.
+\end{lstlisting}
+\end{block}
+
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

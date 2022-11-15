@@ -1,0 +1,4 @@
+    Iteration:  1. (err 1.50E-02)        Iteration:  1. (err 1.19E-02)  
+    Iteration:  2. (err 1.02E-04)        Iteration:  2. (err 8.31E-05)  
+    Iteration:  3. (err 8.28E-07)        Iteration:  3. (err 7.23E-07)  
+    Iteration:  4. (err 7.00E-09)        Iteration:  4. (err 6.10E-09)  
