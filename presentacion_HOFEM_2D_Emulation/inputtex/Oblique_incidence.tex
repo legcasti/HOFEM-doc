@@ -21,7 +21,7 @@
        \begin{multline*}
          G = \int_{-\infty}^{\infty} 
         \dfrac{e^{-j k \sqrt{\rho^2+z^2}}}{4\pi \sqrt{\rho^2+z^2}}
-        \, e^{-j\beta_z z } \, dz \\
+        \, e^{\pm j\beta_z z } \, dz \\
         = 
         \begin{cases}
           \dfrac{1}{4j} H_0^{(2)}\left( \rho\sqrt{k^2-\beta_z^2}\right) 
@@ -30,7 +30,7 @@
                   & \beta_z^2 > k^2
         \end{cases}
       \end{multline*}
-      where $\beta_z=k\cos\theta_i < k$
+      where $\beta_z^2=k^2\cos^2\theta_i < k^2$
 
     % \item For $\theta_i=90^\circ$ (normal incidence) we have
     %   $\beta_z=0$ and hence
@@ -60,9 +60,8 @@
           G = \dfrac{1}{4j} H_0^{(2)}\left( \rho\sqrt{k^2-\beta_z^2}\right) 
           = \dfrac{1}{4j} H_0^{(2)}\left( k|\rho|\sin\theta_i\right)
         \end{equation*}
-        
-        
-        where $\beta_z=k\cos\theta_i < k$
+        %
+      where $\beta_z^2=k^2\cos^2\theta_i < k^2$
         
       \item The particularization to $\theta_i=90^\circ$ (normal
         incidence) yields to the well known result
@@ -103,14 +102,49 @@
             cylinder}
         \end{itemize}
 
-      \item But for oblique incidence we need to take into account the
-        relative ``height'' between $\vr$ and $\vrp$
-        % 
+      \item The $z$-dependence of the solution (including the scattering field) must be as
+        %
         \begin{equation*}
-          e^{-j\beta_z|(\vr-\vrp)\cdot\zunit|}
+          \vE,\vH \propto   e^{j k \cos\theta_i z} =   e^{-j k \cos\theta_s z}
         \end{equation*}
+
+        Note that $\beta_z=k\cos\theta_i=-k\cos\theta_s>0$
+        
       \end{itemize}
     \end{block}
+
+        
+    \begin{block}{FE-IIEE loop \insertcontinuationtext}
+      \begin{itemize}
+      \item Thus, for oblique incidence we need to take into account
+        the relative ``height'' between $\vr$ and $\vrp$
+
+      \item That is, we need to add a factor to the 2D Green function
+        when summing up the contributions on given integration target
+        points of ``height'' $\vr\cdot\zunit$ from different
+        integration point sources of ``height'' $\vrp\cdot\zunit$.
+
+        \vbss
+        
+        The factor is
+        % 
+        \begin{equation*}
+          e^{+j k \cos\theta_i (\vr-\vrp)\cdot\zunit}
+          =   e^{-j k \cos\theta_s (\vr-\vrp)\cdot\zunit} 
+        \end{equation*}
+        %
+        or equivalently 
+        %
+        \begin{equation*}
+          e^{-j k \cos\theta_i (\vrp-\vr)\cdot\zunit}
+          =   e^{+j k \cos\theta_s (\vrp-\vr)\cdot\zunit}
+        \end{equation*}
+        % 
+        
+      \end{itemize}
+    \end{block}
+
+    \newpage 
     
     \begin{block}{In other words,}
       
