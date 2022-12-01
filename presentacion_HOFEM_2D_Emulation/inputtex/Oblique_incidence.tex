@@ -175,7 +175,14 @@
     \item Implementation status:
       \begin{itemize}
       \item Coded
-      \item Not tested for oblique cylinder yet (requires PBCs)
+      \item \alert{UPDATE: Tested (using PBCs)}
+        \begin{itemize}
+        \item Bug/error correction affecting with arbitrary orientations of the cylinder
+        \item Note that the non-null variation with $z$ on the Green's
+          function makes computation of derivatives (needed up to
+          second order for FE-IIEE) cumbersome, specially if coded for
+          arbitrary orientations of the cylinder
+        \end{itemize}
       \end{itemize}
     \end{itemize}
       
@@ -204,8 +211,7 @@
   
   % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[allowframebreaks]{Oblique Incidence}{Far Field
-    ---{Update 8 Nov 2022}---}
+\begin{frame}[allowframebreaks]{Oblique Incidence}{Far Field}
 
   \begin{columns}
     \column{0.3\textwidth} \centering
@@ -391,7 +397,12 @@
     \item Implementation status:
       \begin{itemize}
       \item Coded
-      \item Not tested for oblique cylinder yet (requires PBCs)
+      \item \alert{UPDATE: Tested (using PBCs)}
+        \begin{itemize}
+        \item Level correct (constant captured)
+        \item TM working
+        \item TE (minor bug yet to be captured)
+        \end{itemize}
       \end{itemize}
     \end{itemize}
     
@@ -399,45 +410,128 @@
   
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[fragile,allowframebreaks]{Integration EMULATION\_2D and PBCs}{Far Field}
+\begin{frame}[fragile,allowframebreaks]{Integration EMULATION\_2D and
+    PBCs}{Logic for Oblique Incidence}
 
-  \begin{block}{Logic for Oblique Incidence
-      ---\alert{In progress
-        (barely initiated)}---}
+  \begin{block}{Angle of Incidence}
     \begin{itemize}
-    \item \verb|cylinder_axis| and \verb|slice_thickness| obtained  from
-      PBC module
 
     \item Angle of incidence set up in file \url{.em}
-      \begin{itemize}
-      \item Discard PBC info in file \url{.em}:
+
+    \item Discard PBC info (scan theta and phi angles) in file \url{.em}:
         \verb|periodic_phi_angle|, \verb|periodic_theta_angle|
-      \item PBC $\longleftarrow$ EMULATION\_2D info from file
+    \item PBC $\longleftarrow$ EMULATION\_2D info from file
         \begin{itemize}
         \item Example: \verb|EMULATION_2D_exterior_angles_1 = {45,140}|
-        \end{itemize}
+        \item[~] \verb|EMULATION_2D_cylinder_axis = {0.0,1.0,0.0}|
+        \item[$\Rightarrow$] \verb|periodic_phi_angle=122.73|, \verb|periodic_theta_angle=57.20|
       \end{itemize}
 
-    \item Normal incidence can be run as a particular case
     \end{itemize}
+    
   \end{block}
   
+  NOTE: Note that the local $x$ $y$,$z$ axis may be rotated with
+  respect to global $x$, $y$, $z$ axis when cylinder axis vector
+  is not along global $z$-axis
+  
+  
+  \framebreak
 
-%  REMARK: 
-  \begin{itemize}
-  \item If \verb|enabled_normal_incidence| there is no PBC interaction (\alert{coded and working})
+  \begin{center}
+    \includegraphics[height=0.75\textheight]{cylinder_oblique_y_setup.jpg}
+  \end{center}
+ 
+  \framebreak % %%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{\url{offset_vector}}
     \begin{itemize}
-    \item \verb|cylinder_axis| and \verb|slice_thickness| read from
-      file \url{.em}\footnote{Nevertheless, that information could be
-        obtained by preprocessing the mesh within HOFEM code (extra
-        task, not considered at present)}
-    \item Angle of incidence set up in file \url{.em}:
+    \item Coherence between matrix \verb|offset_vector| (obtained from
+      processing the mesh) and \verb|cylinder_axis|,
+      \verb|slice_thickness| (from EMULATION\_2D module) 
       \begin{itemize}
-      \item Example: \verb|EMULATION_2D_exterior_angles_1 = {90,140}|
+      \item It is checked 
+      \item And even corrected under certain circunstances
+      \end{itemize}
+    \item \alert{NOTE:} The algorithm to compute matrix
+      \verb|offset_vector| is extremely sensible to coordinate
+      precision and prone to error on concluding about the types
+      and number of periodicities (1D, 2D, etc) present in the mesh
+      % puede llenar las tres filas con la misma periodicidad cuando hay más de una periodicidad
+      
+    \end{itemize}
+    
+  \end{block}
+
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{Logic for Normal Incidence}
+    \begin{itemize}
+
+    \item The case with normal incidence can be run as a particular
+      case of oblique incidence, i.e, using PBCs
+
+    \item Obviously, it can be run with \verb|enabled_normal_incidence| 
+      \begin{itemize}
+      \item There is no PBC interaction
+        
+      \item \verb|cylinder_axis| and \verb|slice_thickness| read from
+        file \url{.em}\footnote{Nevertheless, that information could be
+          obtained by preprocessing the mesh within HOFEM code (extra
+          task, not considered at present)}
+      \item Angle of incidence set up in file \url{.em}:
+        \begin{itemize}
+        \item Example: \verb|EMULATION_2D_exterior_angles_1 = {90,140}|
+        \end{itemize}
+        Actually, the $\theta$ angle of incidence is checked (and forced) to be $90$ degrees
       \end{itemize}
     \end{itemize}
-  \end{itemize}
+    
+  \end{block}
+ 
+\framebreak % %%%%%%%%%%%%%%%%%%%
 
+  
+  \begin{block}{Tons of checks\ldots}
+    \begin{itemize}
+      \item \ldots
+    \end{itemize}
+    
+  \end{block}
+  
+%  REMARK: 
+
+  
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[fragile,plain]
+    \centering    {What about \verb|CASE ('ABC_PERIODIC')| }
+
+    \vspace{2\baselineskip}
+    
+    {There is a PROBLEM with the ABC\_PERIODIC boundary condition with
+      EMULATION\_2D; actually, with 1D periodicity in general}
+    
+  \end{frame}
+ 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}{ABC\_PERIODIC}
+    
+  \begin{center}
+%    \includegraphics[height=0.75\textheight]{cylinder_oblique_y_setup_ABC.jpg}
+  \end{center}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{itemize}
+  \item Not a plane wave
+  \item But plane waves around/along a cone
+  \item The scan angle $\theta_s$ depends on position
+  \end{itemize}
   
 \end{frame}
 
