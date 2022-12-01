@@ -1,0 +1,131 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% Definiciones de varios tipos de listas
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\RequirePackage{calc,ifthen}
+%
+\newenvironment{MYitemize}[1]{%
+  \renewcommand{\labelitemi}{#1}%
+    \begin{itemize}}{\end{itemize}}
+
+\newenvironment{enumeratea}{% lista enumearte con a) b)
+  \renewcommand{\theenumi}{\alph{enumi}}%
+  \renewcommand{\labelenumi}{\theenumi)}%
+  \begin{enumerate}}{\end{enumerate}}
+
+
+\newenvironment{MYlista}[1]{%
+    \begin{list}{#1}{}}
+    {\end{list}}
+
+%                               % Lista Dinglist con parametros:
+                                % margen (0 por defecto) y marca a elegir
+\newenvironment{MYdinglist}[2][0mm]{%
+  \begin{list}{\ding{#2}}{%
+      \settowidth{\labelwidth}{\ding{#2}}%
+      \setlength{\itemsep}{\baselineskip}%
+       \setlength{\leftmargin}{\labelwidth+\labelsep+#1}}}%
+{\end{list}}
+
+%                               % Lista Dinglist con color
+\newenvironment{COLdinglist}[2]{%
+  \begin{list}{\textcolor{#2}{\ding{#1}}}{}}%
+    {\end{list}}
+
+%
+                                % Description environment
+\newenvironment{MYdescription}{%
+  \begin{list}{}
+    {\renewcommand{\makelabel}[1]{\textbf{##1:}\hfill}}}
+  {\end{list}}
+
+                                % Description environment
+\newenvironment{MY2description}{%
+  \begin{list}{}
+    {\renewcommand{\makelabel}[1]{\textnormal{##1:}\hfill}}}
+  {\end{list}}
+
+\newenvironment{Ventry}[1]{%
+  \begin{list}{}{\renewcommand{\makelabel}[1]{\textnormal{##1:}\hfill}%
+      \settowidth{\labelwidth}{\textnormal{#1}}%
+      \setlength{\leftmargin}{\labelwidth+\labelsep+1em}}}%
+  {\end{list}}
+
+\newenvironment{Vbfentry}[1]{%
+  \begin{list}{}{\renewcommand{\makelabel}[1]{\textbf{##1:}\hfill}%
+      \settowidth{\labelwidth}{\textbf{#1}}%
+      \setlength{\leftmargin}{\labelwidth+\labelsep+1em}}}%
+  {\end{list}}
+
+                                % Un Description environment: 
+                                % entry (ver Latex Companion pp. 63)
+\newcommand{\entrylabel}[1]{\mbox{\textsf{#1:}}\hfil}
+\newenvironment{entry}{%
+  \begin{list}{}%
+    {\renewcommand{\makelabel}{\entrylabel}%
+      \setlength{\labelwidth}{35pt}%
+      \setlength{\itemsep}{\baselineskip}%
+      \setlength{\leftmargin}{\labelwidth+\labelsep}%
+      }%
+    }%
+  {\end{list}}
+
+\newcommand{\bfentrylabel}[1]{\mbox{\textbf{#1:}}\hfil}
+\newenvironment{bfentry}
+  {\renewcommand{\entrylabel}{\bfentrylabel}%
+  \begin{entry}}
+  {\end{entry}}
+
+                                % Lo mismo pero con \textbfh (configurado con color apropiado con paquete del estilo MYpdfslide_x o similar
+\newcommand{\bfhentrylabel}[1]{\mbox{\textbfh{#1:}}\hfil}
+\newenvironment{bfhentry}
+  {\renewcommand{\entrylabel}{\bfhentrylabel}%
+  \begin{entry}}
+  {\end{entry}}
+
+                                % Un Description environment: 
+                                % Ventry (ver Latex Companion pp. 64)
+                                % NECESITA DEL ENVIRONMENT ENTRY !!
+\newlength{\Mylen}
+\newcommand{\Lentrylabel}[1]{%
+  \settowidth{\Mylen}{\ding{111} \textsf{#1:}}%
+  \ifthenelse{\lengthtest{\Mylen > \labelwidth}}%
+  {\parbox[b]{\labelwidth}%  term > labelwidth
+    {\makebox[0pt][l]{\ding{111} \textsf{#1:}}\\}}%
+  {\textsf{{\ding{111}} #1:}}%  term < labelwidth
+  \hfil\relax}
+\newenvironment{Lentry}
+  {\renewcommand{\entrylabel}{\Lentrylabel}%
+  \begin{entry}}
+  {\end{entry}}
+
+\newlength{\Myylen}
+\newcommand{\Lyentrylabel}[1]{%
+  \settowidth{\Myylen}{\textsf{#1:}}%
+  \ifthenelse{\lengthtest{\Myylen > \labelwidth}}%
+  {\parbox[b]{\labelwidth}%  term > labelwidth
+    {\makebox[0pt][l]{\textsf{#1:}}\\}}%
+  {\textsf{#1:}}%  term < labelwidth
+  \hfil\relax}
+\newenvironment{Lyentry}
+  {\renewcommand{\entrylabel}{\Lyentrylabel}%
+  \begin{entry}}
+  {\end{entry}}
+
+\newlength{\Mybflen}
+\newcommand{\Lbfentrylabel}[1]{%
+  \settowidth{\Mybflen}{\ding{111} \textbf{#1:}}%
+  \ifthenelse{\lengthtest{\Mybflen > \labelwidth}}%
+  {\parbox[b]{\labelwidth}%  term > labelwidth
+    {\makebox[0pt][l]{\ding{111} \textbf{#1:}}\\}}%
+  {\textbf{{\ding{111}} #1:}}%  term < labelwidth
+  \hfil\relax}
+\newenvironment{Lbfentry}
+  {\renewcommand{\entrylabel}{\Lbfentrylabel}%
+  \begin{entry}}
+  {\end{entry}}
+
+
+
