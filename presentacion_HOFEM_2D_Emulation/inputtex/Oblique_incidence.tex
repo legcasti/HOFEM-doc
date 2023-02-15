@@ -6,6 +6,10 @@
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Green's Function}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
   \begin{frame}[allowframebreaks]{Oblique Incidence}
 
   \begin{columns}
@@ -15,7 +19,7 @@
     % \footnotesize{}
     
     \column{0.65\textwidth} \centering
-   \begin{block}{Green Function}
+   \begin{block}{Green's Function}
      % \begin{itemize}
      % \item For any  $\theta_i$ we have
        \begin{multline*}
@@ -58,7 +62,7 @@
     % \footnotesize{}
     
     \column{0.65\textwidth} \centering
-    \begin{block}{Green Function}
+    \begin{block}{Green's Function}
       \begin{itemize}
       \item For any  $\theta_i$ we have
         \begin{equation*}
@@ -175,7 +179,7 @@
     \item Implementation status:
       \begin{itemize}
       \item Coded
-      \item \alert{UPDATE: Tested (using PBCs)}
+      \item Tested (using PBCs)
         \begin{itemize}
         \item Bug/error correction affecting with arbitrary orientations of the cylinder
         \item Note that the non-null variation with $z$ on the Green's
@@ -210,6 +214,10 @@
 \end{frame}
   
   % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Far Field}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[allowframebreaks]{Oblique Incidence}{Far Field}
 
@@ -410,6 +418,11 @@
   
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Integration of EMULATION\_2D and PBCs}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \begin{frame}[fragile,allowframebreaks]{Integration EMULATION\_2D and
     PBCs}{Logic for Oblique Incidence}
 
@@ -507,6 +520,10 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{A note on ABC\_PERIODIC boundary condition}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
   \begin{frame}[fragile,plain]
     \centering    {What about \verb|CASE ('ABC_PERIODIC')| }
 
@@ -532,6 +549,18 @@
   \item But plane waves around/along a cone
   \item The scan angle $\theta_s$ depends on position
   \end{itemize}
+
+  \framebreak % %%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{alertblock}{Conclusion/Decision}
+    \begin{itemize}
+    \item We decide not to modify the ABC periodic to adapt it to the
+      1D periodicity case
+    \item We leave/trust FE-IIEE loop take into account that effect
+      and compensate
+  \end{itemize}
+  \end{alertblock}
+
   
 \end{frame}
 

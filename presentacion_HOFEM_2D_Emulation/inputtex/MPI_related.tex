@@ -55,10 +55,11 @@
 
 \item MPI communication between processes within POST-MODE
   \begin{itemize}
-  \item At present it is simply by all MPI processes reading the
+  \item \alert{At present} it is simply by all MPI processes reading the
     EMULATION\_2D data structure from disk (and not only process~0)
 
-  \item \alert{Use of custom MPI datatypes} (simple prototype under
+  \item A more attractive possibility \alert{for the future} is
+    the\alert{use of custom MPI datatypes} (simple prototype under
     test at present)
     \begin{itemize}
     \item One MPI call: low latency, readability of the code

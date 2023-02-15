@@ -75,9 +75,9 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\GreenT}{\url{Green3D}}
-\newcommand{\GreenD}{\url{Green2D}}
-\newcommand{\GreenTEw}{\url{Green3D_Ewald1D}}
+\newcommand{\GreenT}{\texttt{Green3D}}
+\newcommand{\GreenD}{\texttt{Green2D}}
+\newcommand{\GreenTEw}{\texttt{Green3D\_Ewald1D}}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -124,7 +124,7 @@
 % }}
 
 \institute{Contact: Luis Emilio García-Castillo
-  \url{legcasti@ing.uc3m.es}, Adrián Amor \url{aamor@ing.uc3m.es}, Sergio Llorente \url{sollorent@ing.uc3m.es}}
+  \url{legcasti@ing.uc3m.es}, Adrián Amor \url{aamor@ing.uc3m.es}, Sergio Llorente \url{sllorent@ing.uc3m.es}}
 
 %\date{}
 
@@ -141,18 +141,18 @@
 
 % Delete this, if you do not want the table of contents to pop up at
 % the beginning of each section:
-% \AtBeginSection[]
-% {
-%   \begin{frame}<beamer>[allowframebreaks]{Outline}
-%     \tableofcontents[currentsection]
-%   \end{frame}
-% }
-% \AtBeginSubsection[]
-% {
-%   \begin{frame}<beamer>{Outline}
-%     \tableofcontents[currentsection,currentsubsection]
-%   \end{frame}
-% }
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>[allowframebreaks]{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
 
 %\AtBeginPart{\frame{\partpage}}
 
@@ -187,9 +187,11 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Green3D vs Green2D for FE-IIEE}
+
   \begin{frame}[plain]
     \centering \Large{We start considering the use of {\GreenT} or
-      {\GreenD} the scattering of inifinite cylinders using 3D
+      {\GreenD} for the scattering of inifinite cylinders using a 3D
       simulator on a section (``slice'') of the cylinder}
     
   \end{frame}
@@ -200,6 +202,9 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  \section{Ewald Acceleration (1D periodicity)}
+  \label{sec:Ewald1D}
+  
   \begin{frame}[plain,label=Ewald1D]
     \centering    \Large{Details on Ewald (1D periodicity)}
   \end{frame}
@@ -209,17 +214,32 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Fortran Module}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
   \begin{frame}[plain]
-    \centering    \Large{Fortran Module \url{EMULATION_2D_scattering_module.F90}}
+    \centering    \Large{Implementation of Fortran Module:
+      \\ \url{EMULATION_2D_scattering_module.F90}}
     
   \end{frame}
   
   \input{\dirinputtex/Fortran_Module_EMULATION_2D}
   
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Far Field Numerical Results}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  % RESULTS  
+  % Far-field comparison (PEC and Coated PEC) with analytical solution
+
+  \input{\dirinputtex/FF_ex}
+  
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \section{Oblique Incidence}
 
   \begin{frame}[plain]
     \centering    {Until now we were considering normal incidence to the cylinder}
@@ -234,6 +254,8 @@
 
   % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
+  \subsection{Numerical Results (oblique incidence)}
+  
   \begin{frame}[plain,label=TestOblicuo]
     \centering    \Large{Oblique incidence tests}
   \end{frame}
@@ -243,6 +265,8 @@
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modifications on Near Field Postprocessing}
 
   \begin{frame}[plain]
     \centering \Large{Modifications relative to postprocessing (near
@@ -254,6 +278,8 @@
   
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+  \section{MPI related issues}
+  
   \begin{frame}[plain,label=MPI]
     \centering    \Large{MPI related issues}
   \end{frame}

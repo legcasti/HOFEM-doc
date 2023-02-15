@@ -5,6 +5,48 @@
 % Set de slides dedicadas a formulacion Ewald con 1D periodicity
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    \begin{frame}[fragile,allowframebreaks]{\GreenTEw}
+
+    
+    \begin{block}{Ewald Method in HOFEM}
+    \begin{columns}[T]
+      \column{0.50\textwidth}
+      \includegraphics[width=\textwidth,clip=true,trim=70 350 70 80]{Tesis_Daniel_Ewald_1} 
+      \column{0.45\textwidth}
+      \begin{lstlisting}[style=myFORTRANcodeS,basicstyle=\ttfamily\tiny]
+!Distancia de la celda unidad en X
+ Dx = SQRT(DOT_PRODUCT(PBC_structure%offset_vector(1,:),PBC_structure%offset_vector(1,:)))
+ !Distancia de la celda unidad en Y
+ Dy = SQRT(DOT_PRODUCT(PBC_structure%offset_vector(2,:),PBC_structure%offset_vector(2,:)))
+    
+ E = SQRT(PI/Dx/Dy)
+
+ !Sum using Ewald transformation
+ DO m=-2,2
+    DO n=-2,2
+
+    !Calcular alpha_mn
+    alpha_mn = SQRT(CMPLX((PI*m/Dx)**2 + (PI*n/Dy)**2 + (PI*m/Dx)*Kx + &
+    (PI*n/Dy)*Ky + (1.0_DBL/4.0_DBL)*(Kx**2+Ky**2-K**2),0.0_DBL,KIND=DBL));
+      \end{lstlisting}
+    \end{columns}
+  \end{block}
+
+
+  \begin{block}{Ewald 1D periodicity}
+    \begin{itemize}
+    \item Naively we thought if was simply setting
+      either $m=0$ or $n=0$
+    \item \alert{But it is NOT} \ldots
+%      \hyperlink{Ewald1D}{click here to go to section on Ewald 1D}
+      \hyperlink{Ewald1D}{see next slided on Ewald 1D}
+    \end{itemize}
+  \end{block}
+
+  \end{frame}
+
   % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
 \begin{frame}[allowframebreaks]{Ewald sum}

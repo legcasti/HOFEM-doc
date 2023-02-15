@@ -52,6 +52,30 @@
 EMULATION_2D = true
 -- Set the type of green function used
 EMULATION_2D_green_function_type = "2D"
+     \end{lstlisting}
+   \end{block}
+
+   \begin{itemize}
+   \item Once EMULATION\_2D mode is activated FE-IIEE and farfield
+     calculations are specialized
+   \item By default, the Green's function used is the one for 2D
+     problems, i..e, $H_0^2$ (selected as above):
+     \begin{center}
+     \url{EMULATION_2D_green_function_type = "2D"}
+   \end{center}
+
+ \item If ``3D'' is selected, the Green's function of 3D is used and
+   Ewald acceleration (``Ewald 1D'') is automatically activated.
+   \end{itemize}
+   
+   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   
+   \begin{block}{Input file \url{.em}} 
+     \begin{lstlisting}[basicstyle=\ttfamily\footnotesize,tabsize=3,frame=none]
+--------------------------------------
+--     EMULATION 2D properties      --
+--------------------------------------
 -- Activation flag for normal incidence
 EMULATION_2D_normal_incidence = true
 -- Thickness of the slice used as pseudo2D problem
@@ -205,24 +229,31 @@ sigma-lambda
     \begin{itemize}
     \item Near field: {GreenD} derivatives are rewritten in a compact way
       supporting computation of the scattering near field (within
-      FE-IIEE loop) for arbitraily oriented cylinders
+      FE-IIEE loop) for arbitrarily oriented cylinders
 
-    \item Far field: Perfect agreement between numerical and analytical
-      solutions
+    \item Far field: Also works with arbitrarily oriented cylinders in
+      terms of local $\theta$, $\phi$ components (local in the sense
+      of spherical coordinate system with axis $z$ along the cylinder
+      axis)
       \begin{itemize}
-      \item Well\ldots agreement up to a constant (not worried at all about it)
+      \item Note that for normal incidence
+        \begin{itemize}
+        \item $\theta$-component is longitudinal component
+          ($-z$-component) 
+        \item $\phi$-component is transverse component
+        \end{itemize}
+      \item Perfect agreement between numerical and analytical
+        solutions for both TE/TM polarizations and normal incidence \ldots
+        \begin{itemize}
+        \item However, we have \alert{identified a case for oblique
+            incidence which there is no agreement neither with TM or TE
+            polarization} (See file \url{FarField_bug.pdf} for details)
+        \end{itemize}
       \end{itemize}
     \end{itemize}
 
   \end{frame}
 
 
-  
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% RESULTS  
-% Far-field comparison (PEC and Coated PEC) with analytical solution
-
-  \input{\dirinputtex/FF_ex}
   
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
