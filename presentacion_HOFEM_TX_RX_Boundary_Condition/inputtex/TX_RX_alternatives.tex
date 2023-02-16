@@ -12,9 +12,272 @@
 \subsection{Existing FEM Formulation in HOFEM}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{TITULO}
-  Hola
+\begin{frame}[allowframebreaks]{FEM Formulation}
+
+  \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+  \item Formulation based on double curl vector wave equation (use of
+    $\vec{E}$ \alert{or} $\vec{H}$).
+
+    \begin{equation*}
+    \vnabla\times \left(f_r^{-1} \vnabla\times  \vec{V}\right)-
+    k_0^2 g_r \vec{V}=
+    -j k_0 H_0 \vec{P} + \nabla\times f_r^{-1}\vec{L}
+    \end{equation*}  
+
+
+    \begin{table}[tb]
+      \renewcommand{\arraystretch}{1.3}
+      \caption{Formulation magnitudes and parameters}
+      \label{table::formulation}
+      \centering
+      \begin{tabular}{c|ccccccccc}
+        & $\vec{V}$ & $\vVd$ & ${\bar{\bar{f_r}}}$
+        & ${\bar{\bar{g_r}}}$ & $h$
+        & $\vec{P}$ & $\vec{L}$
+%        & $\Gamma_\text{D}$  & $\Gamma_\text{N}$
+        \\
+        \hline
+        Form. $\vec{E}$ &  $\vec{E}$ & $\vec{H}$ & ${\bar{\bar{\mu_r}}}$ 
+        & ${\bar{\bar{\epsilon_r}}}$ & $\eta$ & $\vec{J}$ & $\vec{M}$
+%         &   $\Gamma_{\text{PEC}}$ & $\Gamma_{\text{PMC}}$
+        \\
+        Form. $\vec{H}$ &  $\vec{H}$ & $\vec{E}$ & ${\bar{\bar{\epsilon_r}}}$ 
+        & ${\bar{\bar{\mu_r}}}$ & $-\frac{1}{\eta}$ & $\vec{M}$ & $-\vec{J}$
+%         &  $\Gamma_{\text{PMC}}$ & $\Gamma_{\text{PEC}}$
+        \\
+      \end{tabular}
+      
+    \end{table}
+
+  \end{itemize}
+
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+
+  \item Use of $\Hcurl$ spaces:
+%
+    \begin{equation}
+      \Hcurl_0 = \lbrace \vec{W} \in \Hcurl,\, \normal \times \vec{W} = 0 \;\;
+      \text{on} \;\; \Gamma_{\text{D}} \rbrace
+      \label{eq::hcurl_0}
+    \end{equation}
+    % 
+    \begin{equation}
+      \Hcurl = \lbrace \vec{W} \in L^2,\, \vnabla \times \vec{W} \in L^2 \rbrace
+      \label{eq::hcurl}
+    \end{equation}
+
+  \item and Galerkin method leads to (with respect to the double-curl term only) to:
+
+
+    \begin{equation*}
+      \int_\Omega \left( \vnabla \times \vec{F} \right) \cdot \left( {\bar{\bar{f_r}}}^{-1}
+        \vnabla \times \vec{V} \right) d\Omega 
+     % - k_0^2 \int_\Omega \left( \vec{F} \cdot \bar{\bar{g_r}} \, \vec{V} \right) d\Omega
+       + 
+       \underbrace{\alert{\int_{\Gamma} \vF\cdot(\normal \times \underbrace{( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )}_{-j k_0 h_0\, \vVd}) d\Gamma}}_{\text{``natural'' b.c.}}
+    \end{equation*}
+
+  \item More precisely
+    \begin{itemize}
+    \item Form.\ $\vE$:
+      ${\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} = -jk_0\eta_0 \,\vH$
+    \item Form.\ $\vH$:
+      ${\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} = +j\dfrac{k_0}{\eta_0} \,\vE$
+    \end{itemize}
+    
+
+  \end{itemize}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{equation*}
+    \text{The integral boundary term} \quad {\int_{\Gamma} \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )) d\Gamma}
+  \end{equation*}
+
+
+    \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+    \item Can be used to weakly impose some boundary conditions of the problem
+
+    \item For instance, Neumann boundary condition
+        %
+        \begin{multline*}
+          \normal \times \left( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} \right) = \vecs{\Psi}_\text{N} \\
+          \quad \longrightarrow \quad
+          \int_{\Gamma} \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )) d\Gamma = \int_{\Gamma} \vecs{\Psi}_\text{N} \,d\Gamma
+        \end{multline*}
+
+    \item For instance, ABC boundary condition
+      %
+      \begin{multline*}
+          \normal \times \left( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} \right) + \gamma\, \normal \times \normal \times \vec{V} = \vecs{\Psi}_\text{C}
+          \\ \quad \longrightarrow \quad
+          \int_{\Gamma} \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )) \,d\Gamma
+          = \int_{\Gamma} \vecs{\Psi}_\text{C} d\Gamma
+          + \gamma \int_{\Gamma} \left( \normal \times \vec{F} \right) \cdot \left( \normal \times \vec{V} \right) d\Gamma_\text{C}
+        \end{multline*}
+      
+      \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      
+      
+    \item Note that the implementation of above boundary conditions is
+      straightforward because 
+      \begin{itemize}
+      \item Either, the integrand of the boundary term was a known function
+
+        
+      \item or, it can be expressed in terms of the primal unknown
+        $\vV$
+
+      \end{itemize}
+
+    \item At the end of the day, the contribution of the boundary term
+      is translated into algebra as
+      \begin{itemize}
+      \item extra contributions for the values of the matrix
+        coefficients (related to the existing $g_i$ associated to the
+        corresponding boundary).
+      \item I.e., no extra degrees of freedom $g_i$ are needed
+      \end{itemize}
+      \vbs
+      
+      \begin{center}
+        % \fbox{
+        \parbox{0.85\linewidth}{\centering \alert{What does it happen when that
+            is not the case?}  }
+      %}
+      \end{center}
+      
+    \end{itemize}
+
 \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{FEM Continuity Conditions}
+
+  \begin{itemize}
+  \item Assuming $\vV=\sum_i g_i\vN_i\:\leftrightarrow \: \lbrace g \rbrace$
+  \end{itemize}
+  
+  \begin{block}{Between Neighbour Elements 1 and 2}
+    \begin{columns}
+      \column{0.6\textwidth} \centering
+      \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+      \item Two continuity conditions:
+        \begin{itemize}
+        \item Strong continuity of $\normal\times\vV$
+          %
+          \begin{equation*}
+             \lbrace g \rbrace_1 =  \lbrace g \rbrace_2
+          \end{equation*}
+          
+        \item Weak continuity of $\normal\times\vVd$
+          %
+          \begin{multline*}
+            \int_{\Gamma} \vF\cdot(\normal_1 \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V}_1 )) d\Gamma \\+ 
+            \int_{\Gamma} \vF\cdot(\normal_2 \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V}_2 )) d\Gamma = 0 \qquad \text{\alert{We simply omit the term}}
+          \end{multline*}
+        \end{itemize}
+      \end{itemize}
+      
+      \column{0.4\textwidth} \centering
+      \centering\includegraphics[angle=0,width=0.95\linewidth]
+      {finite_element_mesh}
+    \end{columns}
+  \end{block}
+  
+  Note that $\normal\times\vF_1=\normal\times\vF_2$ and that
+  $ \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times
+  \vec{V}) = (\normal\times\vF)\cdot(\normal \times (
+  {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )$
+
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   \begin{block}{Between Elements Simulating  a Thin Sheet}
+    \begin{columns}
+      \column{0.58\textwidth} \centering
+       \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+
+       \item In general, we need to break continuity on
+          
+         \begin{itemize}
+         \item $\normal\times\vV$ $\Rightarrow$ Duplication of degrees
+           of freedom: $\lbrace g\rbrace_1,\lbrace g\rbrace_2$
+         \item $\normal\times\vVd$ $\Rightarrow$ The integral
+           boundary term can not be omitted
+         \end{itemize}
+
+       \item Two linearly independent equations involving four
+         magnitudes $\vE_1,\vE_2,\vH_1,\vH_2$:
+         \begin{equation*}
+          [~]_{2x2}\, \lbrace X \rbrace_{2x1}=\lbrace B \rbrace_{2x1}
+        \end{equation*}
+
+      \item \alert{Different possibilities depending on the magnitudes chosen
+        as sources (right hand side $B$) and responses $X$}
+
+      \item Clear analogy with two-port network parameters of linear
+        circuit analysis: \\
+        {\centering$\vE\leftrightarrow V \qquad \vH\leftrightarrow I$}
+        % \begin{itemize}
+        % \item $\vE\leftrightarrow V$
+        % \item $\vH\leftrightarrow I$
+        % \end{itemize}
+      \end{itemize}
+      
+      \column{0.4\textwidth} \centering
+      \includegraphics[angle=0,width=\textwidth]{scenario.pdf}
+    \end{columns}
+   \end{block}
+
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{The Simplest (Least Invasive)
+    Approach}{The Immittance Approach}
+  
+  \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
+  \item We express $\normal\times\vVd$ for region~1 and region~2 in terms of 
+    $\normal\times\vV$ of region~1 and region~2, i.e.,
+    %
+    \begin{equation*}
+      \begin{Bmatrix}
+        \normal\times\vVd_1 \\ \normal\times\vVd_2
+      \end{Bmatrix} =
+      \begin{bmatrix}
+        YZ_{11} & YZ_{12} \\ YZ_{21}  & YZ_{22}
+      \end{bmatrix}
+      \begin{Bmatrix}
+        \normal\times\vV_1 \\ \normal\times\vV_2
+      \end{Bmatrix} 
+    \end{equation*}
+
+    \begin{itemize}
+    \item  This is equivalent to an immitance characterization of
+      the equivalent two-port network connecting upper and lower
+      regions separated by the sheet.
+      % 
+      \begin{itemize}
+      \item Form.\ $\vE$: $\vV=\vE$, $\vVd=\vH$, immittance $\equiv$ admitance 
+      \item Form.\ $\vE$: $\vV=\vE$, $\vVd=\vH$, immittance $\equiv$ impedance 
+      \end{itemize}
+    \end{itemize}
+
+    \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+  \item We substitute\ldots
+    
+  
+  \end{itemize}
+  
+  
+\end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
