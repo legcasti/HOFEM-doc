@@ -236,8 +236,8 @@
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[allowframebreaks]{The Simplest (Least Invasive)
-    Approach}{The Immittance Approach}
+\begin{frame}[allowframebreaks]{The Immittance Approach}{The Simplest (Least Invasive)
+    Approach}
   
   \begin{itemize}\setlength{\itemsep}{0.3\baselineskip}
   \item We express $\normal\times\vVd$ for region~1 and region~2 in terms of 
@@ -266,17 +266,369 @@
       \end{itemize}
     \end{itemize}
 
+  \item We substitute $\normal\times\vVd$ on the integral boundary
+    terms corresponding to region~1 and region~2 by its linear
+    combination of $\normal\times\vV_1$ and $\normal\times\vV_2$.
+
     \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-  \item We substitute\ldots
-    
-  
+  \item For instance, with $\vE$-formulation we have
+
+    \begin{multline*}
+      \int_{\Gamma} \vF_1\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_1 )) d\Gamma = \\
+      y_{11}\int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+      + y_{12}\int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+    \end{multline*}
+    \begin{multline*}
+      \int_{\Gamma} \vF_2\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_2 )) d\Gamma = \\
+      y_{21}\int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+      + y_{22}\int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+    \end{multline*}
+      % 
+    where $\normal\times\vF_1=\normal\times\vF_2$ (conformal mesh
+    above-below the sheet).
+
+ 
+  \item Thus, the TX/RX continuity conditions imposed by the sheet are
+    translated into algebra simply as extra contributions for the
+    values of the matrix coefficients (related to the duplicated
+    degrees of freedom $\lbrace g\rbrace_1$, $\lbrace g\rbrace_2$
+    associated to the sheet).
+
+    \begin{block}{Advantages}
+      \begin{itemize}
+      \item Simple (non code invasing)
+        \begin{itemize}
+        \item No new variational unknowns
+        \item No new equations but simply additional terms to the
+          existing ones
+        \item Only requires replication of uknonws on sheet:
+          $\lbrace g\rbrace_1\ne\lbrace g\rbrace_2$
+        \end{itemize}
+      \item Reciprocity of the material ($y_{12}=y_{21}$)
+        $\Rightarrow$ symmetry of FEM matrix
+      \item Short circuit (PEC) and open circuit (PMC) conditions
+        naturally reproducible
+      \end{itemize}
+    \end{block}
+
+    \begin{block}{Disadvantages}
+      \begin{itemize}
+      \item Total transmission (sheet transparency) \alert{not reproducible}
+        \begin{itemize}
+        \item \alert{Singular} system of equations
+        \item This situation must be either avoided or taken into
+          account explicitly
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+
   \end{itemize}
+
+\end{frame}
   
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{The Immittance Approach}{Special Cases}
   
+  \begin{block}{Short Circuit (PEC) Sheet}
+    \begin{itemize}
+    \item We have $y_{12}=y_{21}=0$ and $y_{11}=y_{22}=\infty$
+    \item Thus, the equation associated to $\lbrace g\rbrace_1$ has
+      a dominant term 
+%      
+      \begin{equation*}
+        \ldots + y_{11} \int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+        + y_{12}\int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+        \approx
+        \infty \int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+      \end{equation*}
+    %  
+     that corresponds to impose $\normal\times\vec{E}_1=0$,
+      i.e., algebraically $\lbrace g\rbrace_1=0$
+      
+    \item Analogously, with equation associated to
+      $\lbrace g\rbrace_2$
+      \begin{equation*}
+        \ldots + y_{21} \int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+        + y_{22}\int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+        \approx
+        \infty \int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+      \end{equation*}
+    %  
+     that corresponds to impose $\normal\times\vec{E}_2=0$,
+      i.e., algebraically $\lbrace g\rbrace_2=0$
+      
+    \end{itemize}
+  \end{block}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{Open Circuit (PMC) Sheet}
+    \begin{itemize}
+    \item We have $y_{12}=y_{21}=0$ and $y_{11}=y_{22}=0$
+    \item Thus, the equation associated to $\lbrace g\rbrace_1$ is
+      equivalent to have
+%      
+      \begin{equation*}
+        \int_{\Gamma} \vF_1\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_1 )) d\Gamma = 0
+      \end{equation*}
+    %  
+      that corresponds to weakly impose
+      $\normal\times{\bar{\bar{\mu_r}}}^{-1}\vnabla\times\vec{E}_1=0$ (Neumann b.c.)  i.e.,
+      $\normal\times\vec{H}_1=0$.
+      
+    \item Analogously, with equation associated to
+      $\lbrace g\rbrace_2$
+      \begin{equation*}
+        \int_{\Gamma} \vF_2\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_2 )) d\Gamma = 0
+      \end{equation*}
+    %  
+      that corresponds to weakly impose
+      $\normal\times{\bar{\bar{\mu_r}}}^{-1}\vnabla\times\vec{E}_2=0$ (Neumann b.c.)  i.e.,
+      $\normal\times\vec{H}_2=0$.
+    \end{itemize}
+  \end{block}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{block}{Total Transmission (sheet transparency)}
+    \begin{itemize}
+    \item It is clear that from
+      % 
+      \begin{equation*}
+        \begin{Bmatrix}
+          \normal\times\vVd_1 \\ \normal\times\vVd_2
+        \end{Bmatrix} =
+        \begin{bmatrix}
+          YZ_{11} & YZ_{12} \\ YZ_{21}  & YZ_{22}
+        \end{bmatrix}
+        \begin{Bmatrix}
+          \normal\times\vV_1 \\ \normal\times\vV_2
+        \end{Bmatrix} 
+      \end{equation*}
+      % 
+      is not possible to impose full continuity of $\normal\times\vV$,
+      $\normal\times\vVd$, i.e., 
+      % 
+      \begin{equation*}
+        \begin{Bmatrix}
+          \normal\times\vV_1 \\ \normal\times\vVd_1
+        \end{Bmatrix} =
+        \begin{Bmatrix}
+          \normal\times\vV_2 \\ \normal\times\vVd_2
+        \end{Bmatrix} 
+      \end{equation*}
+      
+    \item Technically, we have $y_{12}=y_{21}=\infty$ and $y_{11}=y_{22}=\infty$
+      
+    \end{itemize}
+  \end{block}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{Total Transmission (sheet transparency)}
+    \begin{itemize}
+    
+  \item Thus, the equation associated to $\lbrace g\rbrace_1$ has
+      two dominant terms 
+%      
+      \begin{equation*}
+        \ldots + \infty \int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+        + \infty \int_{\Gamma} \vF_1\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+      \end{equation*}
+      
+    \item Analogously, with equation associated to
+      $\lbrace g\rbrace_2$
+      \begin{equation*}
+        \ldots + \infty \int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_1 )) d\Gamma
+        + \infty \int_{\Gamma} \vF_2\cdot(\normal  \times \vec{E}_2 )) d\Gamma
+      \end{equation*}
+      
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{Total Transmission (sheet transparency)}%{Singular System of Equations}
+    \begin{itemize}
+    \item Both equations tends to be the same equation
+      \begin{itemize}
+      \item[$\Rightarrow$] Singular FEM matrix
+      \end{itemize}
+      \alert{(I mush still check signs for $y_{ij}$) } Nevertheless,
+      the above resulting equations can never impose continuity of
+      $\normal\times\vV$
+    \end{itemize}
+  \end{alertblock}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{%Total Transmission (sheet transparency)
+      Workaround}
+    \begin{itemize}
+    \item We must identify the case, i.e., when $y_{ij}$ is
+      \alert{``large enough''}
+      
+    \item Then, we have two main possibilities:
+      \begin{itemize}
+      \item \alert{Ignore}  TR/RX boundary conditions for that sheet, i.e., do nothing  
+        \begin{itemize}
+        \item Do not replicate  degres of freedom $\lbrace g\rbrace$
+        \item Do not alter FEM equations
+        \end{itemize}
+      \item \alert{Recover} full continuity, i.e., continuity of
+        $\normal\times\vV$ and $\normal\times\vVd$ once replication of
+        $\lbrace g\rbrace$ has been perfomed
+        \begin{itemize}
+        \item Several possibilities
+        \end{itemize}
+      \end{itemize}
+
+    \end{itemize}
+  \end{block}
+      
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+    How to Recover Full Continuity?
+  \end{center}
+
+  \begin{itemize}
+  \item We keep  the integral boundary term $\int_{\Gamma} \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V} )) d\Gamma$
+    for region~1 and region~2
+
+  \item We add two equations to recover continuity of
+    $\normal\times\vV$ and $\normal\times\vVd$
+    \end{itemize}
+    
+  \begin{block}{Continuity of  $\normal\times\vV$}
+    \begin{itemize}
+    \item We add one strong condition equation
+      %
+      \begin{equation*}
+         \lbrace g\rbrace_1 =  \lbrace g\rbrace_2 
+      \end{equation*}
+
+    \item Perfomed at the algebraic level, 
+      % (similar to the setting of  Dirichlet boundary conditions),
+      i.e., operating in the matrix by fixing all coefficients on the
+      corresponding row to zero except the two being related (paired)
+
+    \item The above operation is simple, trivial I would say.
+
+    \item However, \alert{if I am not wrong}, it introduces asymmetry
+      in the FEM matrix
+      
+    \end{itemize}
+  \end{block}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{block}{Continuity of $\normal\times\vVd$, i.e., of
+      $\normal\times( {\bar{\bar{f_r}}}^{-1} \vnabla \times\vV)$}
+    \begin{itemize}
+    \item We add a equation to weakly force continuity of the dual variable
+      %
+      \begin{equation}
+        \label{eq:weakrecoverVd}
+        \int_{\Gamma} \vF_1\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_1 )) d\Gamma = 
+        \int_{\Gamma} \vF_2\cdot(\normal \times ( {\bar{\bar{\mu_r}}}^{-1} \vnabla \times \vec{E}_2 )) d\Gamma 
+      \end{equation}
+
+    \item Note that the above equation after discretization introduces
+      asymmetry in the matrix
+      \begin{itemize}
+      \item Although, $\normal\times\vF_1=\normal\times\vF_2$ due to
+        conformity of the mesh
+      \item the discretization of
+        $\normal \times \vnabla\times\vec{E}$ involves all basis
+        functions of the finite element, i.e., not only basis
+        functions on the common boundary (sheet)
+      \end{itemize}
+
+      
+    \end{itemize}
+  \end{block}
+
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+    \includegraphics[angle=0,width=0.8\textwidth]{ilustracion_weakrecoverVd}
+  \end{center}
+  
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  \begin{itemize}
+  \item The above procedure of recovering full continuity can also be
+    approached by defining a new variational unknown for the dual
+    field, i.e., for $\normal\times\vVd$; basically,
+    \begin{itemize}
+    \item A $\vJ$ for $\vE$-formulation
+    \item A $\vM$ for $\vH$-formulation
+    \end{itemize}
+    
+  \item Once being involved with new variational uknowns it is much
+    worthier to consider other approaces (\alert{described later in
+      this presentation??})
+    
+  \end{itemize}
+      
+  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{center}
+    How to Recover Full Continuity? (EQUIVALENT METHOD) \\ \alert{need
+      to think twice if is really equivalent}
+  \end{center}
+
+  \begin{itemize}
+  \item We use ABCs in each region, i.e., we substitute in the integral
+    boundary term of region~1 and region~2 as follows
+    $\int_{\Gamma} \vF\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1}
+    \vnabla \times \vec{V} )) d\Gamma$ with
+
+    \begin{equation*}
+      \begin{split}
+        \int_{\Gamma} \vF_1\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V}_1 )) \,d\Gamma
+        &= 
+        jk_0 \int_{\Gamma} \left( \normal \times \vec{F}_1 \right) \cdot \left( \normal \times \vec{V}_1 \right) d\Gamma_\text{C}
+        \\
+        \int_{\Gamma} \vF_2\cdot(\normal \times ( {\bar{\bar{f_r}}}^{-1} \vnabla \times \vec{V}_2 )) \,d\Gamma
+        &= 
+        jk_0 \int_{\Gamma} \left( \normal \times \vec{F}_2 \right) \cdot \left( \normal \times \vec{V}_2 \right) d\Gamma_\text{C}
+      \end{split}
+    \end{equation*}
+
+    This is trivial
+
+    \item We add one strong condition equation
+      %
+      \begin{equation*}
+         \lbrace g\rbrace_1 =  \lbrace g\rbrace_2 
+      \end{equation*}
+    \end{itemize}
+      
+    
 \end{frame}
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}[allowframebreaks]{The $[g]$, $[h]$, $[ABCD]$ Approaches}
+  
+  % \begin{block}{$[g]$ Parameters}
+  %   \begin{equation*}
+  %     \begin{Bmatrix}
+  %       \normal\times\vVd_1 \\ \normal\times\vVd_2
+  %     \end{Bmatrix} =
+  %     \begin{bmatrix}
+  %       YZ_{11} & YZ_{12} \\ YZ_{21}  & YZ_{22}
+  %     \end{bmatrix}
+  %     \begin{Bmatrix}
+  %       \normal\times\vV_1 \\ \normal\times\vV_2
+  %     \end{Bmatrix} 
+  %   \end{equation*}
+  % \end{block}
+  
+\end{frame}
+  
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
