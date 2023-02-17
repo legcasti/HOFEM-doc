@@ -19,15 +19,15 @@
     \column{0.6\textwidth}
     {
       \begin{align*}
-        \hat{n}_1\times(\mu_r^{-1}&\nabla\times\vec{E}_1) - \frac{jk_0}{\eta}y_{11}\hat{n}_1\times(\hat{n}_1\times\vec{E}_1) - \\
-        - &\frac{jk_0}{\eta}y_{12}\hat{n}_2\times(\hat{n}_2\times\vec{E}_2) = 0,
+        \hat{n}_1\times(\mu_r^{-1}&\nabla\times\vec{E}_1) - \frac{jk_0}{\eta}\vec{Y_{uu}}\hat{n}_1\times(\hat{n}_1\times\vec{E}_1) - \\
+        - &\frac{jk_0}{\eta}\vec{Y_{ul}}\hat{n}_2\times(\hat{n}_2\times\vec{E}_2) = 0,
       \end{align*}
       \begin{align*}
-        \hat{n}_2\times(\mu_r^{-1}&\nabla\times\vec{E}_2) - \frac{jk_0}{\eta}y_{21}\hat{n}_1\times(\hat{n}_1\times\vec{E}_1) - \\
-        - &\frac{jk_0}{\eta}y_{22}\hat{n}_2\times(\hat{n}_2\times\vec{E}_2) = 0,
+        \hat{n}_2\times(\mu_r^{-1}&\nabla\times\vec{E}_2) - \frac{jk_0}{\eta}\vec{Y_{lu}}\hat{n}_1\times(\hat{n}_1\times\vec{E}_1) - \\
+        - &\frac{jk_0}{\eta}\vec{Y_{ll}}\hat{n}_2\times(\hat{n}_2\times\vec{E}_2) = 0,
       \end{align*}
 
-      \alert{Note that $y_{\rm xx}$ are relative to the vacuum admittance.}
+      \alert{Note that $\vec{Y}_{\rm xx}$ are relative to the vacuum admittance.}
     }
   \end{columns}
 
@@ -50,32 +50,28 @@
   \end{align}
   
   \framebreak % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  For \emph{upper} elements on $\Gamma_{\rm TR}$ (side 1), we have
+  For \emph{upper} elements on $\Gamma_{\rm TR}$ (sub-index u), we have
   \small
   \begin{align*}
-    &{\rm LHS_1} \\
-    &\; + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_1\times\hat{n}),y_{11}\hat{n}\times(\vec{w}_1\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_1\times\hat{n}),y_{12}\hat{n}\times(\vec{w}_2\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} = \\
-    &\;\;{\rm RHS_1},
+    &{\rm LHS_u} \\
+    &\; + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_u\times\hat{n}),\vec{Y_{uu}}\hat{n}\times(\vec{w}_u\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_u\times\hat{n}),\vec{Y_{ul}}\hat{n}\times(\vec{w}_l\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} = \\
+    &\;\;{\rm RHS_u},
   \end{align*}
   \normalfont
-  whereas for \emph{lower} elements (side 2), we get
+  whereas for \emph{lower} elements (sub-index l), we get
   \small
   \begin{align*}
-    &{\rm LHS_2} \\
-    &\; + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_2\times\hat{n}),y_{21}\hat{n}\times(\vec{w}_1\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_2\times\hat{n}),y_{22}\hat{n}\times(\vec{w}_2\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} = \\
-    &\;\;{\rm RHS_2},
+    &{\rm LHS_l} \\
+    &\; + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_l\times\hat{n}),\vec{Y_{lu}}\hat{n}\times(\vec{w}_u\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} + j\frac{k_0}{\eta}\Big\langle\hat{n}\times(\vec{w}_l\times\hat{n}),\vec{Y_{ll}}\hat{n}\times(\vec{w}_l\times\hat{n})\Big\rangle_{\Gamma_{\text{TR}}} = \\
+    &\;\;{\rm RHS_l},
   \end{align*}
   \normalfont
 \end{frame}
 
-\begin{frame}{FEM implementation}
+\begin{frame}{DOFs implementation}
   \begin{itemize}
     \item The DOFs will be doubled for the faces and the interior edges.
-    \item The exterior edges of $\Gamma_{\rm TR}$ are not doubled.
-    \begin{itemize}
-      \item Identified by code: the edges associated to two faces are interior. 
-      \item If the boundaries of the sheet belong to PBC, the edges of $\Gamma_{\rm TR}$ are also doubled.
-    \end{itemize}
+    \item The exterior edges of $\Gamma_{\rm TR}$ are not doubled (unless they belong to a PBC).
   \end{itemize}
 \end{frame}
 
@@ -83,7 +79,7 @@
 \subsection{Testing}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Problem to be solved}
+\begin{frame}[allowframebreaks]{Problem to be solved}
   \begin{columns}
     \column{0.48\textwidth} \centering
     {\includegraphics[angle=0,width=\textwidth]{tr_problem.pdf}}
@@ -94,8 +90,8 @@
         \item $\Gamma_\text{TR}$: Transmission/reflection sheet defined with 
         \begin{equation*}
           \vec{Y} = \begin{bmatrix}
-            y_{11} & y_{12} \\
-            y_{21} & y_{22}
+            \vec{Y}_{uu} & \vec{Y}_{ul} \\
+            \vec{Y}_{lu} & \vec{Y}_{ll}
           \end{bmatrix}.
         \end{equation*}
         \item $\Gamma_\text{C}$: ABC with excitation with polarization $E_y$
@@ -103,6 +99,8 @@
       \end{itemize} 
     }
   \end{columns}
+  \framebreak
+  \includegraphics[angle=0,width=\textwidth]{tr_problem_gid.png}
 \end{frame}
 
 \begin{frame}{Testbench}
@@ -110,13 +108,14 @@
     \item $\vec{Y} = \begin{bmatrix}
       0 & 0 \\
       0 & 0
-    \end{bmatrix}$: sanity check, we should get same result as the two halves with a PMC.
-    \item $\vec{Y} = \mathbb{I}$: sanity check, we should get same result as the two halves with an ABC.
-    \item Change lower $\Gamma_\text{C}$ by PEC and solve analytic problem with four media: final test.
+    \end{bmatrix}$: sanity check, we should get same result as the first half with a PMC.
+    \item $\vec{Y} = \mathbb{I}$: sanity check, we should get same result as the
+    first half with an ABC and the other half with no field at all.
+    \item Solve analytic problem with four media: final test.
     \begin{itemize}
       \item Obtain parameters for $\vec{Y}$ of the equivalent problem.
       \item Get same solutions for the electric field.
-      \item Transparent? Puede ser que aproximar con $1e6$. Quizás con ABCD.
+      \item Transparent? We will study approximation with higher values of admittance.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -125,33 +124,52 @@
 \subsection{HOFEM Implementation}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{HOFEM implementation}
+\begin{frame}[allowframebreaks]{HOFEM implementation}
   \begin{itemize}
     \item New boundary condition: \texttt{TRBC}.
+    \item New parameters in \texttt{boundary\_conditions\_module}
     \begin{itemize}
-      \item We define a normal, $\hat{n}_{\rm TRBC}$ to detect lower and upper side. Upper side is the closer to $\hat{n}_{\rm TRBC}$.
-      \item Definition of $y_{11}$, $y_{12}$, $y_{21}$, and $y_{22}$ as relative values with respect to vacuum admittance.
-    \end{itemize}
-    \item Two options for implementation 
-    \begin{itemize}
-      \item Integers defined in \texttt{tetrahedra\_element}.
-      \item Allocatable array of $1\times N_{\rm elem, TR}$ where the two positions (stored in boundary conditions module, 
-      accessible from \texttt{mesh\_reordering\_module} and \texttt{elementary\_terms\_3D}):
+      \item \texttt{normal\_upper\_trbc}: $\hat{n}_{\rm TRBC}$. Upper side is the closer to $\hat{n}_{\rm TRBC}$.
+      \item \texttt{admittance\_relative\_[3D,2D]\_tensor\_[,ll,ul,lu]}: relative values with respect to an admittance (as in AIBC).
+      \item \texttt{neighbors\_trbc}: allocatable array of $2\times N_{\rm elem, TRBC}$ with:
       \begin{enumerate}
-        \item $10\times$ Neighbor element identifier (to couple $\vec{w}_2$ and $\vec{w}_1$).
-        \item Integer 1,2 (side) (to extract the values of $y_{11}$,$y_{12}$,$y_{21}$, and $y_{22}$).
-        % \item Integer 10\texttt{bc\_id}+[1,2] (side) (to extract the values of $y_{11}$,$y_{12}$,$y_{21}$, and $y_{22}$).
+        \item $10\times$ upper element identifier + TRBC face.
+        \item $10\times$ lower element identifier + TRBC face.
       \end{enumerate}
-      % the neighbor for elements belonging to $\hat{n}_{\rm TRBC}$ and an integer 10\texttt{bc\_id}+[1,2] (side), located in \texttt{mesh\_object\_module}, accessible from \texttt{mesh\_reordering\_module} and \texttt{elementary\_terms\_3D}.
     \end{itemize}
-    \item Significant methods involved:
+
+    \framebreak
+
+    \item Construction of \texttt{neighbors\_trbc} (only if TRBC are present):
     \begin{itemize}
-      \item Postprocessing over \texttt{reordering\_DOF\_algorithm\_3D}. 
-      \item \texttt{calc\_boundary\_3D\_nxNi\_nxNi\_term\_of\_this\_element}.
-      \item Construction of the MUMPS-related matrix: different number of
-      non-zeros per element, assembly of coupled elements (now single-element
-      assembly).
+      \item At \texttt{mesh\_interface\_constructor}.
+      \item Using \texttt{surface\_set\_IDs}. They are given as consecutive (upper and then lower, or viceversa) elements. \alert{This is taken into account but it also looks for the element.}
+      \item Possibility of different TRBCs.
+      \item Identification of lower and upper elements.
+      \item \alert{We need to detect here exterior edges (not done yet).}
+    \end{itemize}
+    \item Doubling unknowns (only if TRBC are present):
+    \begin{itemize}
+      \item At \texttt{mesh\_reordering\_module}.
+      \item Using \texttt{neighbors\_trbc}.
+      \item Modification of the DOFs for the lower elements.
     \end{itemize}   
+
+    \framebreak
+
+    \item Sparsity matrix assignments (only if TRBC are present):
+    \begin{itemize}
+      \item At \texttt{MUMPS\_set\_local\_JCN\_ICN\_RHS\_for\_matrix\_assembling}.
+      \item Modification of the band number since we have \emph{coupled} elements.
+      \item Non-symmetric matrix. \alert{If $\vec{Y}_{\rm lu} = \vec{Y}_{\rm ul}$, the matrix is symmetric (not yet detected).}
+    \end{itemize}   
+    \item Elementary terms (only if TRBC are present):
+    \begin{itemize}
+      \item Detect if lower or upper for identifying $\vec{Y}_{\rm uu}$, $\vec{Y}_{\rm ul}$, $\vec{Y}_{\rm lu}$, or $\vec{Y}_{\rm ll}$.
+      \item Same term as AIBC for $\vec{Y}_{\rm uu}$ and $\vec{Y}_{\rm ll}$.
+      \item Buffer for basis functions and Jacobian matrix for coupling terms $\vec{Y}_{\rm ul}$ and $\vec{Y}_{\rm lu}$.
+    \end{itemize}
+    \item FE assembly with \texttt{JCN} and \texttt{ICN}.
   \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
