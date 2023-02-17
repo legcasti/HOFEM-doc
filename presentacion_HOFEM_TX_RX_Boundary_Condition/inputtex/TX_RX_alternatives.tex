@@ -515,7 +515,7 @@
 
     \item The above operation is simple, trivial I would say.
 
-    \item However, \alert{if I am not wrong}, it introduces asymmetry
+    \item However,  it introduces asymmetry
       in the FEM matrix
       
     \end{itemize}
@@ -552,7 +552,7 @@
   \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   \begin{center}
-    \includegraphics[angle=0,width=0.8\textwidth]{ilustracion_weakrecoverVd}
+    \includegraphics[angle=0,width=0.6\textwidth]{ilustracion_weakrecoverVd}
   \end{center}
   
   \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -606,30 +606,137 @@
       \end{equation*}
     \end{itemize}
       
-    
-\end{frame}
+  \end{frame}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[allowframebreaks]{The $[g]$, $[h]$, $[ABCD]$ Approaches}
   
-  % \begin{block}{$[g]$ Parameters}
-  %   \begin{equation*}
-  %     \begin{Bmatrix}
-  %       \normal\times\vVd_1 \\ \normal\times\vVd_2
-  %     \end{Bmatrix} =
-  %     \begin{bmatrix}
-  %       YZ_{11} & YZ_{12} \\ YZ_{21}  & YZ_{22}
-  %     \end{bmatrix}
-  %     \begin{Bmatrix}
-  %       \normal\times\vV_1 \\ \normal\times\vV_2
-  %     \end{Bmatrix} 
-  %   \end{equation*}
-  % \end{block}
+  \begin{columns}[T]
+    \column{0.45\textwidth} \centering
+    \begin{block}{$[g]$ Parameters}
+      \begin{equation*}
+        \begin{Bmatrix}  I_1 \\ V_2 \end{Bmatrix} =
+        \begin{bmatrix}    g_{11} & g_{12} \\ g_{21}  & g_{22}  \end{bmatrix}
+        \begin{Bmatrix}  V_1 \\ I_2  \end{Bmatrix} 
+      \end{equation*}
+    \end{block}
+    
+    \column{0.45\textwidth} \centering
+    \begin{block}{$[h]$ Parameters}
+      \begin{equation*}
+        \begin{Bmatrix}  V_1 \\ I_2  \end{Bmatrix} =
+        \begin{bmatrix}    h_{11} & h_{12} \\ h_{21}  & h_{22}  \end{bmatrix}
+        \begin{Bmatrix}  I_1 \\ V_2 \end{Bmatrix} 
+      \end{equation*}
+    \end{block}
+    
+    \end{columns}
+
+    \vbs
+    
+    \begin{columns}
+    \column{0.45\textwidth} \centering
+    \begin{block}{$[ABCD]$ Parameters}
+      \begin{equation*}
+        \begin{Bmatrix}  V_1 \\ I_1  \end{Bmatrix} =
+        \begin{bmatrix}   A & B \\ C & D  \end{bmatrix}
+        \begin{Bmatrix}  V_2 \\ I_2 \end{Bmatrix} 
+      \end{equation*}
+    \end{block}
+  \end{columns}
+
+%  \framebreak  % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%    \begin{block}{Ideal Transformer}
+% %     \begin{columns}
+% %       \column{0.45\textwidth} \centering
+%        \includegraphics[angle=0,width=0.8\textwidth]{ilustracion_weakrecoverVd}
+% %       \column{0.45\textwidth} \centering
+ % \begin{equation*}
+ %   \begin{bmatrix}   A & B \\ C & D  \end{bmatrix}
+ %    = 
+ %   \begin{bmatrix}   \frac{1}{n} & 0 \\ 0 & n  \end{bmatrix}
+ % \end{equation*}
+ % \begin{equation*}
+ %   \begin{bmatrix}    h_{11} & h_{12} \\ h_{21}  & h_{22}  \end{bmatrix}
+ %    = 
+ %   \begin{bmatrix}   0 & \frac{1}{n} \\ -\frac{1}{n} & 0  \end{bmatrix}
+ % \end{equation*}
+% %   \end{columns}
+      
+%    \end{block}
+
+      
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{The $[g]$, $[h]$, $[ABCD]$
+    Approaches}{Total Transmission (sheet transparency)}
+  
+  \begin{block}{Analogy: Ideal Transformer}
+     \begin{columns}
+       \column{0.45\textwidth} \centering
+    \includegraphics[angle=0,width=\textwidth]{ideal_transformer}
+     \column{0.45\textwidth} \centering
+    \begin{equation*}
+      \begin{bmatrix}   A & B \\ C & D  \end{bmatrix}
+      = 
+      \begin{bmatrix}   \frac{1}{n} & 0 \\ 0 & n  \end{bmatrix}
+    \end{equation*}
+    \begin{equation*}
+      \begin{bmatrix}    h_{11} & h_{12} \\ h_{21}  & h_{22}  \end{bmatrix}
+      = 
+      \begin{bmatrix}   0 & \frac{1}{n} \\ -\frac{1}{n} & 0  \end{bmatrix}
+    \end{equation*}
+    \end{columns}
+    
+  \end{block}
+
+
+\end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{The $[g]$, $[h]$, $[ABCD]$
+    Approaches}{FEM Implementation}
+
+  \begin{itemize}
+  \item Duplication of degrees of freedom:
+    $\lbrace g\rbrace_1,\lbrace g\rbrace_2$
+  \item Keeping the integral boundary terms in region~1 and region~2
+
+  \item Adding two equations to weakly enforce the corresponding
+    tranmsision conditions (given by $[g]$, $[h]$, $[ABCD]$, etc)
+    
+    \begin{itemize}
+    \item  Optionally, definition of a new variational unknown
+      for the dual field, i.e., for $\normal\times\vVd$; basically,
+    \begin{itemize}
+    \item A $\vJ$ for $\vE$-formulation
+    \item A $\vM$ for $\vH$-formulation
+    \end{itemize}
+    for helping to set the equations
+  \end{itemize}
+
+    
+    
+  \end{itemize}
+
   
 \end{frame}
-  
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \begin{frame}[plain]
+    \centering \Large{Elaborar sobre la muy buena idea de Sergio de ¡utilizar
+      relaciones lineales entre combinaciones de V e I como sucede en
+      la caraterización con los parámetros S}
+    
+  \end{frame}
+
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
